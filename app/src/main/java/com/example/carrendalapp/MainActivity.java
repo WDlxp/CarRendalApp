@@ -45,28 +45,41 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //初始化ActionBar和Status使得状态栏沉浸的同时标题栏居中
+        initActionBarAndStatusBar();
+        //绑定布局
         findViews();
+        //将Fragment放入List中
         initFragmentList();
 
+        //获取一个自定义的ViewPagerAdapter
         MainViewPagerAdapter mainViewPagerAdapter = new MainViewPagerAdapter(getSupportFragmentManager(), fragmentList);
+        //设置Adapter
         viewPager.setAdapter(mainViewPagerAdapter);
 
+        //设置监听事件
         setListeners();
-        initActionBarAndStatusBar();
     }
 
     private void initActionBarAndStatusBar() {
         ActionBar actionBar = getSupportActionBar();
         //使用自定义的标题栏使得标题栏字体居中
         if (actionBar != null) {
+            //设置自定义的ActionBar显示方式
             actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+            //设置自定义ActionBar的布局
             actionBar.setCustomView(R.layout.title_layout);
-            tvTitle = (TextView) actionBar.getCustomView().findViewById(R.id.display_title);
-            tvTitle.setText("租车");
+            //设置阴影大小
+            actionBar.setElevation(5f);
+            //绑定Title
+            tvTitle = actionBar.getCustomView().findViewById(R.id.display_title);
+            //展示自定义ActionBar
             actionBar.setDisplayShowCustomEnabled(true);
         }
         //设置状态栏颜色
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
     }
 
     private void setListeners() {
@@ -95,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //设置bottomNavigationView的点击导航到ViewPager的对应页面
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {

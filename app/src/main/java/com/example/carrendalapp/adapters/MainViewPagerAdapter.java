@@ -7,6 +7,8 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import java.util.List;
 
 /**
+ * 自定义的一个PagerAdapter
+ *
  * @author WD
  */
 public class MainViewPagerAdapter extends FragmentPagerAdapter {
