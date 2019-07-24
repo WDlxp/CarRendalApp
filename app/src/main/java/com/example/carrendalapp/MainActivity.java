@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.example.carrendalapp.adapters.MainViewPagerAdapter;
 import com.example.carrendalapp.fragments.HomePageFragment;
 import com.example.carrendalapp.fragments.MemberFragment;
+import com.example.carrendalapp.utils.ActionBarAndStatusBarUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -38,15 +39,11 @@ public class MainActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
 
-    private TextView tvTitle;
-
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //初始化ActionBar和Status使得状态栏沉浸的同时标题栏居中
-        initActionBarAndStatusBar();
         //绑定布局
         findViews();
         //将Fragment放入List中
@@ -59,27 +56,9 @@ public class MainActivity extends AppCompatActivity {
 
         //设置监听事件
         setListeners();
-    }
-
-    private void initActionBarAndStatusBar() {
-        ActionBar actionBar = getSupportActionBar();
-        //使用自定义的标题栏使得标题栏字体居中
-        if (actionBar != null) {
-            //设置自定义的ActionBar显示方式
-            actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-            //设置自定义ActionBar的布局
-            actionBar.setCustomView(R.layout.title_layout);
-            //设置阴影大小
-            actionBar.setElevation(0f);
-            //绑定Title
-            tvTitle = actionBar.getCustomView().findViewById(R.id.display_title);
-            //展示自定义ActionBar
-            actionBar.setDisplayShowCustomEnabled(true);
-        }
-        //设置状态栏颜色
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        }
+        //初始化ActionBar和Status使得状态栏同时标题栏居中的工具类
+        ActionBarAndStatusBarUtil.initActionBarAndStatusBar(getWindow(), getSupportActionBar());
+        ActionBarAndStatusBarUtil.setTitle("租车");
     }
 
     private void setListeners() {
@@ -96,9 +75,9 @@ public class MainActivity extends AppCompatActivity {
                 bottomNavigationView.getMenu().getItem(position).setChecked(true);
                 //修改标题栏
                 if (position == 0) {
-                    tvTitle.setText("租车");
+                    ActionBarAndStatusBarUtil.setTitle("租车");
                 } else {
-                    tvTitle.setText("我的");
+                    ActionBarAndStatusBarUtil.setTitle("我的");
                 }
             }
 
