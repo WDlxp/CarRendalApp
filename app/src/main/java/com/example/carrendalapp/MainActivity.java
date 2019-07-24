@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             //设置自定义ActionBar的布局
             actionBar.setCustomView(R.layout.title_layout);
             //设置阴影大小
-            actionBar.setElevation(5f);
+            actionBar.setElevation(0f);
             //绑定Title
             tvTitle = actionBar.getCustomView().findViewById(R.id.display_title);
             //展示自定义ActionBar
