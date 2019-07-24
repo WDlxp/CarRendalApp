@@ -1,13 +1,8 @@
-package com.example.carrendalapp.adapter;
+package com.example.carrendalapp.adapters;
 
-import android.view.View;
-import android.view.ViewGroup;
-
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.PagerAdapter;
 
 import java.util.List;
 

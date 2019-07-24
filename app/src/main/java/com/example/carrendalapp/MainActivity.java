@@ -1,25 +1,26 @@
 package com.example.carrendalapp;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.ColorUtils;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.example.carrendalapp.adapter.MainViewPagerAdapter;
+import com.example.carrendalapp.adapters.MainViewPagerAdapter;
 import com.example.carrendalapp.fragments.HomePageFragment;
 import com.example.carrendalapp.fragments.MemberFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,25 +40,33 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView tvTitle;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViews();
         initFragmentList();
+
         MainViewPagerAdapter mainViewPagerAdapter = new MainViewPagerAdapter(getSupportFragmentManager(), fragmentList);
         viewPager.setAdapter(mainViewPagerAdapter);
-        setListeners();
 
+        setListeners();
+        initActionBarAndStatusBar();
+    }
+
+    private void initActionBarAndStatusBar() {
         ActionBar actionBar = getSupportActionBar();
-        //使用自定义的标题栏
-        if(actionBar != null){
+        //使用自定义的标题栏使得标题栏字体居中
+        if (actionBar != null) {
             actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
             actionBar.setCustomView(R.layout.title_layout);
             tvTitle = (TextView) actionBar.getCustomView().findViewById(R.id.display_title);
             tvTitle.setText("租车");
             actionBar.setDisplayShowCustomEnabled(true);
         }
+        //设置状态栏颜色
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 
     private void setListeners() {
