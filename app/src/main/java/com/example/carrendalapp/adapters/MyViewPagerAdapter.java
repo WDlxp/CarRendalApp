@@ -1,9 +1,11 @@
 package com.example.carrendalapp.adapters;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,12 +13,14 @@ import java.util.List;
  *
  * @author WD
  */
-public class MainViewPagerAdapter extends FragmentPagerAdapter {
+public class MyViewPagerAdapter extends FragmentPagerAdapter {
     private final List<Fragment> fragmentList;
+    private ArrayList<String> pageTitles;
 
-    public MainViewPagerAdapter(FragmentManager fm, List<Fragment> fragmentList) {
+    public MyViewPagerAdapter(FragmentManager fm, List<Fragment> fragmentList, ArrayList<String> pageTitles) {
         super(fm);
         this.fragmentList = fragmentList;
+        this.pageTitles = pageTitles;
     }
 
     @Override
@@ -27,5 +31,11 @@ public class MainViewPagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         return fragmentList.size();
+    }
+
+    @Nullable
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return pageTitles.get(position);
     }
 }

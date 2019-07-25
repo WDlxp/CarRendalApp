@@ -1,23 +1,16 @@
 package com.example.carrendalapp;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.ColorUtils;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.TextView;
 
-import com.example.carrendalapp.adapters.MainViewPagerAdapter;
+import com.example.carrendalapp.adapters.MyViewPagerAdapter;
 import com.example.carrendalapp.fragments.HomePageFragment;
 import com.example.carrendalapp.fragments.MemberFragment;
 import com.example.carrendalapp.utils.ActionBarAndStatusBarUtil;
@@ -38,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Fragment> fragmentList = new ArrayList<>(2);
 
     private ViewPager viewPager;
+    private ArrayList<String> titles;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -50,9 +44,9 @@ public class MainActivity extends AppCompatActivity {
         initFragmentList();
 
         //获取一个自定义的ViewPagerAdapter
-        MainViewPagerAdapter mainViewPagerAdapter = new MainViewPagerAdapter(getSupportFragmentManager(), fragmentList);
+        MyViewPagerAdapter myViewPagerAdapter = new MyViewPagerAdapter(getSupportFragmentManager(), fragmentList, titles);
         //设置Adapter
-        viewPager.setAdapter(mainViewPagerAdapter);
+        viewPager.setAdapter(myViewPagerAdapter);
 
         //设置监听事件
         setListeners();
@@ -107,6 +101,10 @@ public class MainActivity extends AppCompatActivity {
     private void initFragmentList() {
         fragmentList.add(homePageFragment);
         fragmentList.add(memberFragment);
+
+        titles = new ArrayList<>(fragmentList.size());
+        titles.add("首页");
+        titles.add("我的");
     }
 
     private void findViews() {
