@@ -35,7 +35,9 @@
     </style>
 
     <style name="circleButtonStyle" parent="Theme.AppCompat.Light">
-
+        <item name="android:textSize">@dimen/register_text_size</item>
+        <item name="android:background">@drawable/btn_circle_bg</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
 </resources>

@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".LoginActivity">
+    tools:context=".LoginActivity"
+    android:background="@android:color/white">
 
     <com.example.carrendalapp.views.CircleImageView
         android:id="@+id/iv_profile"
@@ -13,16 +14,18 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:src="@drawable/add_picture"
+        app:layout_constraintBottom_toTopOf="@id/et_account"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
         android:id="@+id/tv_account"
         style="@style/LoginTextViewStyle"
         android:text=" 账        号"
         app:layout_constraintBaseline_toBaselineOf="@+id/et_account"
-        app:layout_constraintRight_toRightOf="@id/tv_password_again" />
+        app:layout_constraintRight_toRightOf="@id/tv_password" />
 
     <EditText
         android:id="@+id/et_account"
@@ -30,6 +33,7 @@
         android:layout_marginTop="20dp"
         android:hint="请输入账号"
         android:theme="@style/LoginEditTextStyle"
+        app:layout_constraintBottom_toTopOf="@id/et_password"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_profile" />
@@ -38,7 +42,8 @@
         android:id="@+id/tv_password"
         style="@style/LoginTextViewStyle"
         android:text=" 密        码"
-        app:layout_constraintBaseline_toBaselineOf="@+id/et_password" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/et_password"
+        app:layout_constraintRight_toRightOf="@id/tv_account" />
 
     <EditText
         android:id="@+id/et_password"
@@ -47,8 +52,51 @@
         android:inputType="textPassword"
         android:maxLength="16"
         android:theme="@style/LoginEditTextStyle"
+        app:layout_constraintBottom_toTopOf="@id/btn_login"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/et_account" />
+
+    <Button
+        android:id="@+id/btn_login"
+        style="@style/circleButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginHorizontal="50dp"
+        android:layout_marginTop="30dp"
+        android:text="登录"
+        app:layout_constraintBottom_toTopOf="@id/tv_to_register"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_password" />
+
+    <TextView
+        android:id="@+id/tv_to_register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:text="注册"
+        android:textColor="@android:color/holo_blue_light"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/tv_to_forget_password"
+        app:layout_constraintTop_toBottomOf="@id/btn_login" />
+
+    <TextView
+        android:id="@+id/tv_to_forget_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="忘记密码？"
+        android:textColor="@android:color/holo_blue_light"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toRightOf="@id/tv_to_register"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_login" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
