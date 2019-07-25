@@ -17,10 +17,28 @@ public class MyViewPagerAdapter extends FragmentPagerAdapter {
     private final List<Fragment> fragmentList;
     private ArrayList<String> pageTitles;
 
+    /**
+     * 我的预约页面使用
+     *
+     * @param fm           FragmentManager
+     * @param fragmentList Fragment页面的集合
+     * @param pageTitles   ViewPager的标题集合
+     */
     public MyViewPagerAdapter(FragmentManager fm, List<Fragment> fragmentList, ArrayList<String> pageTitles) {
         super(fm);
         this.fragmentList = fragmentList;
         this.pageTitles = pageTitles;
+    }
+
+    /**
+     * 首页使用
+     *
+     * @param fm           FragmentManager
+     * @param fragmentList Fragment页面的集合
+     */
+    public MyViewPagerAdapter(FragmentManager fm, List<Fragment> fragmentList) {
+        super(fm);
+        this.fragmentList = fragmentList;
     }
 
     @Override
@@ -33,6 +51,12 @@ public class MyViewPagerAdapter extends FragmentPagerAdapter {
         return fragmentList.size();
     }
 
+    /**
+     * 绑定TabLayout后Tab的text从这里获取
+     *
+     * @param position 位置
+     * @return 返回标题
+     */
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
