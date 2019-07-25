@@ -8,12 +8,11 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
+        android:layout_height="wrap_content"
         android:padding="20dp"
         tools:context=".RegisterActivity">
 
-        <ImageView
+        <com.example.carrendalapp.views.CircleImageView
             android:id="@+id/iv_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -26,7 +25,6 @@
         <TextView
             android:id="@+id/tv_account"
             style="@style/LoginTextViewStyle"
-
             android:text=" 账        号"
             app:layout_constraintBaseline_toBaselineOf="@+id/et_account"
             app:layout_constraintRight_toRightOf="@id/tv_password_again" />
@@ -131,7 +129,7 @@
             android:layout_height="50dp"
             android:layout_marginHorizontal="50dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/btn_register_bg"
+            android:background="@drawable/btn_cicrle_bg"
             android:text="注册"
             android:textColor="@android:color/white"
             android:textSize="@dimen/register_text_size"

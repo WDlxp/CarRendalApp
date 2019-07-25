@@ -15,7 +15,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        ActionBarAndStatusBarUtil.initActionBarAndStatusBar(getWindow(),getSupportActionBar());
-        ActionBarAndStatusBarUtil.setTitle("注册页");
+
+        ActionBarAndStatusBarUtil.initActionBarAndStatusBar(getWindow(), getSupportActionBar());
+        ActionBarAndStatusBarUtil.setTitle("登录页");
     }
 }
