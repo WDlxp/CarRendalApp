@@ -39,16 +39,27 @@ public class MyAppointmentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_appointment);
         findViews();
         initFragmentList();
+        initViews();
+    }
 
+    /**
+     * 初始化Tab页面
+     */
+    private void initViews() {
+        ActionBarAndStatusBarUtil.initActionBarAndStatusBar(getWindow(), getSupportActionBar());
+        ActionBarAndStatusBarUtil.setTitle("我的预约");
+        ActionBarAndStatusBarUtil.showBackButton();
+
+        //设置ViewPager的Title之后TabLayout绑定后通过获取PageTitle作为Tab的文字
+        titles = new ArrayList<>(fragmentList.size());
+        titles.add(" 全部 ");
+        titles.add("预约中");
+        titles.add("已结束");
         //获取ViewPager的适配器
         MyViewPagerAdapter myViewPagerAdapter = new MyViewPagerAdapter(getSupportFragmentManager(), fragmentList, titles);
         vpContainer.setAdapter(myViewPagerAdapter);
         //TabLayout绑定ViewPager
         tlTabs.setupWithViewPager(vpContainer);
-
-        ActionBarAndStatusBarUtil.initActionBarAndStatusBar(getWindow(), getSupportActionBar());
-        ActionBarAndStatusBarUtil.setTitle("我的预约");
-        ActionBarAndStatusBarUtil.showBackButton();
     }
 
     @Override
@@ -66,10 +77,5 @@ public class MyAppointmentActivity extends AppCompatActivity {
         fragmentList.add(allFragment);
         fragmentList.add(appointingFragment);
         fragmentList.add(finishedFragment);
-
-        titles = new ArrayList<>(fragmentList.size());
-        titles.add("全部");
-        titles.add("预约中");
-        titles.add("已经结束");
     }
 }

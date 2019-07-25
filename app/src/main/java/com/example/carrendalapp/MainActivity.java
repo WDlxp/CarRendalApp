@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         initFragmentList();
 
         //获取一个自定义的ViewPagerAdapter
-        MyViewPagerAdapter myViewPagerAdapter = new MyViewPagerAdapter(getSupportFragmentManager(), fragmentList, titles);
+        MyViewPagerAdapter myViewPagerAdapter = new MyViewPagerAdapter(getSupportFragmentManager(), fragmentList);
         //设置Adapter
         viewPager.setAdapter(myViewPagerAdapter);
 
@@ -102,9 +102,9 @@ public class MainActivity extends AppCompatActivity {
         fragmentList.add(homePageFragment);
         fragmentList.add(memberFragment);
 
-        titles = new ArrayList<>(fragmentList.size());
-        titles.add("首页");
-        titles.add("我的");
+//        titles = new ArrayList<>(fragmentList.size());
+//        titles.add("首页");
+//        titles.add("我的");
     }
 
     private void findViews() {
