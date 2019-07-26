@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.carrendalapp.config.UrlAddress;
+import com.example.carrendalapp.entity.User;
 import com.example.carrendalapp.utils.ActionBarAndStatusBarUtil;
 import com.example.carrendalapp.utils.ImageUtil;
 import com.example.carrendalapp.views.CircleImageView;
@@ -163,14 +164,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     /**
      * 检查账号密码是否正确Task
      */
-    private class CheckPasswordTask extends AsyncTask<String, Void, Integer> {
+    private class CheckPasswordTask extends AsyncTask<String, Void, User> {
 
         @Override
-        protected Integer doInBackground(String... strings) {
+        protected User doInBackground(String... strings) {
             String account = strings[0];
             String password = strings[1];
+            User user = null;
             //进行后台操作
-            int result = 0;
             try {
                 URL url = new URL(UrlAddress.CHECK_PASSWORD_URL + "?account=" + account + "&password=" + password);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -180,7 +181,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
                 String line = bufferedReader.readLine();
                 JSONObject object = new JSONObject(line);
-                result = object.getInt("result");
+                int result = object.getInt("result");
+                //如果获得的result=1说明成功登录
+                if (result == 1) {
+                    //获取账号信息
+                    JSONObject data = object.getJSONObject("data");
+                    user = new User(
+                            data.getString("imageName"),
+                            data.getString("account"),
+                            data.getString("password"),
+                            data.getString("name"),
+                            data.getInt("gender"),
+                            data.getString("tel"),
+                            data.getInt("manager")
+                    );
+                }
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
@@ -188,14 +203,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return result;
+            return user;
         }
 
         @Override
-        protected void onPostExecute(Integer integer) {
-            if (integer == 1) {
+        protected void onPostExecute(User user) {
+            if (user != null) {
                 Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("data", user);
+                intent.putExtras(bundle);
                 startActivity(intent);
                 finish();
             } else {

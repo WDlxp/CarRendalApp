@@ -6,13 +6,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.carrendalapp.adapters.MyViewPagerAdapter;
+import com.example.carrendalapp.entity.User;
 import com.example.carrendalapp.fragments.HomePageFragment;
 import com.example.carrendalapp.fragments.MemberFragment;
 import com.example.carrendalapp.utils.ActionBarAndStatusBarUtil;
@@ -35,7 +38,8 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private ArrayList<String> titles;
 
-    private ActionBarAndStatusBarUtil actionBarAndStatusBarUtil=new ActionBarAndStatusBarUtil();
+    private ActionBarAndStatusBarUtil actionBarAndStatusBarUtil = new ActionBarAndStatusBarUtil();
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,19 +51,35 @@ public class MainActivity extends AppCompatActivity {
         //将Fragment放入List中
         initFragmentList();
 
+        //设置监听事件
+        setListeners();
+
+        initViews();
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void initViews() {
         //获取一个自定义的ViewPagerAdapter
         MyViewPagerAdapter myViewPagerAdapter = new MyViewPagerAdapter(getSupportFragmentManager(), fragmentList);
         //设置Adapter
         viewPager.setAdapter(myViewPagerAdapter);
 
-        //设置监听事件
-        setListeners();
         //初始化ActionBar和Status使得状态栏同时标题栏居中的工具类
         actionBarAndStatusBarUtil.initActionBarAndStatusBar(getWindow(), getSupportActionBar());
         actionBarAndStatusBarUtil.setTitle("租车");
         //设置底部导航栏的背景颜色与阴影效果
         bottomNavigationView.setElevation(1f);
         bottomNavigationView.setBackgroundColor(Color.WHITE);
+
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        if (bundle != null) {
+            User user = bundle.getParcelable("data");
+            Toast.makeText(MainActivity.this, user.getAccount() + user.getName(), Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(MainActivity.this, "是空的", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void setListeners() {
@@ -76,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 bottomNavigationView.getMenu().getItem(position).setChecked(true);
                 //修改标题栏
                 if (position == 0) {
-                   actionBarAndStatusBarUtil.setTitle("租车");
+                    actionBarAndStatusBarUtil.setTitle("租车");
                 } else {
                     actionBarAndStatusBarUtil.setTitle("我的");
                 }
