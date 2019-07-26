@@ -18,12 +18,15 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.carrendalapp.config.URL;
+import com.example.carrendalapp.entity.User;
 import com.example.carrendalapp.utils.ActionBarAndStatusBarUtil;
 import com.example.carrendalapp.utils.ImageUtil;
 
@@ -40,7 +43,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private TextView tvToLogin;
     private Handler mHandler = new ImageHandler();
     private Spinner spGender;
-    private String[] genderData = new String[]{"保密", "男", "女"};
+    private String[] genderData = new String[]{"男", "女", "保密"};
+    private EditText etAccount, etPassword, etPasswordAgain, etName, etTel;
+    private Button btnRegister;
+    private String imagePath = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,13 +76,22 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private void setListeners() {
         ivProfile.setOnClickListener(this);
         tvToLogin.setOnClickListener(this);
+
+        btnRegister.setOnClickListener(this);
     }
 
     private void findViews() {
         ivProfile = findViewById(R.id.iv_profile);
         tvToLogin = findViewById(R.id.tv_to_login);
 
+        etAccount = findViewById(R.id.et_account);
+        etPassword = findViewById(R.id.et_password);
+        etPasswordAgain = findViewById(R.id.et_password_again);
+        etName = findViewById(R.id.et_name);
         spGender = findViewById(R.id.sp_gender);
+        etTel = findViewById(R.id.et_tel);
+
+        btnRegister = findViewById(R.id.btn_register);
     }
 
     @Override
@@ -87,7 +102,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 Uri selectedImage = data.getData();
                 String[] filePathColumns = {MediaStore.Images.Media.DATA};
                 Cursor cursor = null;
-                String imagePath = null;
                 if (selectedImage != null) {
                     cursor = getContentResolver().query(selectedImage, filePathColumns, null, null, null);
                     if (cursor != null) {
@@ -140,7 +154,45 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 startActivity(intent);
                 finish();
                 break;
+            case R.id.btn_register:
+                checkAndRegister();
+                break;
             default:
+        }
+    }
+
+    private void checkAndRegister() {
+        String account = etAccount.getText().toString();
+        String password = etPassword.getText().toString();
+        String passwordAgain = etPasswordAgain.getText().toString();
+        String name = etName.getText().toString();
+        int gender = spGender.getSelectedItemPosition();
+        String tel = etTel.getText().toString();
+//        if (imagePath == null) {
+//            Toast.makeText(RegisterActivity.this, "请选择头像", Toast.LENGTH_SHORT).show();
+//        } else
+        Toast.makeText(RegisterActivity.this, "性别代码："+gender, Toast.LENGTH_SHORT).show();
+        if (account.isEmpty()) {
+            Toast.makeText(RegisterActivity.this, "账号不能为空", Toast.LENGTH_SHORT).show();
+            etAccount.requestFocus();
+        } else if (password.isEmpty()) {
+            Toast.makeText(RegisterActivity.this, "密码不能为空", Toast.LENGTH_SHORT).show();
+            etPassword.requestFocus();
+        } else if (passwordAgain.isEmpty() || !passwordAgain.equals(password)) {
+            Toast.makeText(RegisterActivity.this, "密码不一致", Toast.LENGTH_SHORT).show();
+            etPasswordAgain.requestFocus();
+        } else if (name.isEmpty()) {
+            Toast.makeText(RegisterActivity.this, "姓名不能为空", Toast.LENGTH_SHORT).show();
+            etName.requestFocus();
+        } else if (tel.isEmpty()) {
+            Toast.makeText(RegisterActivity.this, "电话不能为空", Toast.LENGTH_SHORT).show();
+            etTel.requestFocus();
+        } else if (tel.length() != 11) {
+            Toast.makeText(RegisterActivity.this, "电话号码不正确", Toast.LENGTH_SHORT).show();
+            etTel.requestFocus();
+        } else {
+            Toast.makeText(RegisterActivity.this, "信息验证成功", Toast.LENGTH_SHORT).show();
+            User user = new User(imagePath, account, password, name, gender, tel, 1);
         }
     }
 

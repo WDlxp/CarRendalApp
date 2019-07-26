@@ -8,6 +8,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.carrendalapp.adapters.MyViewPagerAdapter;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d("MainActivity","onCreate");
         //绑定布局
         findViews();
         //将Fragment放入List中
@@ -54,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
         ActionBarAndStatusBarUtil.initActionBarAndStatusBar(getWindow(), getSupportActionBar());
         ActionBarAndStatusBarUtil.setTitle("租车");
     }
-
     private void setListeners() {
         //设置viewPager监听来同步BottomNavigationView的选中效果
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

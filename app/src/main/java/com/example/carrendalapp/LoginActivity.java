@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.carrendalapp.utils.ActionBarAndStatusBarUtil;
@@ -18,6 +19,7 @@ import com.example.carrendalapp.utils.ActionBarAndStatusBarUtil;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView tvToRegister;
+    private Button btnLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,19 +35,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void setListeners() {
         tvToRegister.setOnClickListener(this);
+        btnLogin.setOnClickListener(this);
     }
 
     private void findViews() {
         tvToRegister = findViewById(R.id.tv_to_register);
+        btnLogin = findViewById(R.id.btn_login);
     }
 
     @Override
     public void onClick(View view) {
-        //跳转都注册页面
-        if (view.getId() == R.id.tv_to_register) {
-            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-            startActivity(intent);
-            finish();
+        Intent intent = null;
+        switch (view.getId()) {
+            case R.id.tv_to_register:
+                //跳转到注册页面
+                intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
+                finish();
+                break;
+            case R.id.btn_login:
+                //登录进入主页
+                intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                break;
+            default:
+
         }
     }
 }
