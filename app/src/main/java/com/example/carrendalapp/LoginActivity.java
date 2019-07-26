@@ -48,7 +48,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
 
         //初始化标题栏和状态栏
-        ActionBarAndStatusBarUtil actionBarAndStatusBarUtil=new ActionBarAndStatusBarUtil();
+        ActionBarAndStatusBarUtil actionBarAndStatusBarUtil = new ActionBarAndStatusBarUtil();
         actionBarAndStatusBarUtil.initActionBarAndStatusBar(getWindow(), getSupportActionBar());
         actionBarAndStatusBarUtil.setTitle("登录页");
 
@@ -147,7 +147,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
                 break;
             case R.id.tv_to_forget_password:
-
+                String account1 = etAccount.getText().toString();
+                if (account1.isEmpty()) {
+                    Toast.makeText(LoginActivity.this, "账号不能为空", Toast.LENGTH_SHORT).show();
+                    etAccount.requestFocus();
+                } else {
+                    new ForgetPasswordTask().execute(account1);
+                }
                 break;
             default:
 
@@ -231,10 +237,58 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         @Override
         protected void onPostExecute(Integer integer) {
+            super.onPostExecute(integer);
             if (integer == 1) {
                 Toast.makeText(LoginActivity.this, "账号不存在", Toast.LENGTH_SHORT).show();
                 etAccount.requestFocus();
             }
         }
     }
+
+    /**
+     * 忘记密码的Task
+     */
+    private class ForgetPasswordTask extends AsyncTask<String, Void, String> {
+        private String account;
+
+        @Override
+        protected String doInBackground(String... strings) {
+            account = strings[0];
+            try {
+                URL url = new URL(UrlAddress.FORGET_PASSWORD_URL + "?operation=query&account=" + account);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
+                InputStream inputStream = urlConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String line = bufferedReader.readLine();
+                JSONObject object = new JSONObject(line);
+                int result = object.getInt("result");
+                if (result == 0) {
+                    return null;
+                } else {
+                    return object.getString("tel");
+                }
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (s != null) {
+                //如果正确获取到账号的号码则跳转到忘记密码
+                Intent intent = new Intent(LoginActivity.this, ForgetPasswordActivity.class);
+                intent.putExtra("account", account);
+                intent.putExtra("tel", s);
+                startActivity(intent);
+            }
+        }
+    }
+
 }
