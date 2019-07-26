@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -16,7 +17,9 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,15 +39,32 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private ImageView ivProfile;
     private TextView tvToLogin;
     private Handler mHandler = new ImageHandler();
+    private Spinner spGender;
+    private String[] genderData = new String[]{"保密", "男", "女"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        //初始化标题栏与状态栏
         ActionBarAndStatusBarUtil.initActionBarAndStatusBar(getWindow(), getSupportActionBar());
         ActionBarAndStatusBarUtil.setTitle("注册页");
+
+        //绑定控件
         findViews();
         setListeners();
+
+        //初始化View
+        initViews();
+    }
+
+    private void initViews() {
+        //适配器
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, genderData);
+        //设置样式
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //加载适配器
+        spGender.setAdapter(arrayAdapter);
     }
 
     private void setListeners() {
@@ -55,39 +75,50 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private void findViews() {
         ivProfile = findViewById(R.id.iv_profile);
         tvToLogin = findViewById(R.id.tv_to_login);
+
+        spGender = findViewById(R.id.sp_gender);
     }
 
     @Override
     protected void onActivityResult(final int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == 1) {
             //获取图片路径
-            if (requestCode == 1 && resultCode == Activity.RESULT_OK && data != null) {
+            if (resultCode == Activity.RESULT_OK && data != null) {
                 Uri selectedImage = data.getData();
                 String[] filePathColumns = {MediaStore.Images.Media.DATA};
-                Cursor cursor = getContentResolver().query(selectedImage, filePathColumns, null, null, null);
-                cursor.moveToFirst();
-                int columnIndex = cursor.getColumnIndex(filePathColumns[0]);
-                final String imagePath = cursor.getString(columnIndex);
-                Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-                ivProfile.setImageBitmap(bitmap);
-                cursor.close();
+                Cursor cursor = null;
+                String imagePath = null;
+                if (selectedImage != null) {
+                    cursor = getContentResolver().query(selectedImage, filePathColumns, null, null, null);
+                    if (cursor != null) {
+                        cursor.moveToFirst();
+                        int columnIndex = cursor.getColumnIndex(filePathColumns[0]);
+                        imagePath = cursor.getString(columnIndex);
+                        Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+                        ivProfile.setImageBitmap(bitmap);
+                        cursor.close();
+                    }
+                }
 
-                new Thread() {
-                    @Override
-                    public void run() {
-                        super.run();
-                        //这里的path就是那个地址的全局变量
-                        File file = new File(imagePath);
-                        String RequestURL = URL.UPLOAD_IMAGE_URL;
-                        String result = ImageUtil.uploadFile(file, RequestURL);
+                if (imagePath != null) {
+                    final String finalImagePath = imagePath;
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            super.run();
+                            //这里的path就是那个地址的全局变量
+                            File file = new File(finalImagePath);
+                            String RequestURL = URL.UPLOAD_IMAGE_URL;
+                            String result = ImageUtil.uploadFile(file, RequestURL);
 //                        String imagePath = URL.MAIN_URL + result;
 //                        Bitmap bitmap=ImageUtil.downloadImg(imagePath);
-                        Message message = new Message();
-                        message.what = 0;
-                        mHandler.sendMessage(message);
-                        Log.d("UploadImage", result);
-                    }
-                }.start();
+                            Message message = new Message();
+                            message.what = 0;
+                            mHandler.sendMessage(message);
+                            Log.d("UploadImage", result);
+                        }
+                    }.start();
+                }
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -113,6 +144,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    @SuppressLint("HandlerLeak")
     private class ImageHandler extends Handler {
         @Override
         public void handleMessage(@NonNull Message msg) {

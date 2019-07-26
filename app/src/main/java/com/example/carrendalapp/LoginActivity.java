@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void findViews() {
-        tvToRegister = findViewById(R.id.tv_to_login);
+        tvToRegister = findViewById(R.id.tv_to_register);
     }
 
     @Override

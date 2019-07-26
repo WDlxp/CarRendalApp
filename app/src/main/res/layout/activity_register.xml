@@ -99,9 +99,18 @@
         <EditText
             android:id="@+id/et_gender"
             style="@style/LoginEditTextStyle"
-            android:hint="请输入性别"
+            android:focusable="false"
             android:theme="@style/LoginEditTextStyle"
             app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/et_name" />
+
+        <Spinner
+            android:id="@+id/sp_gender"
+            android:layout_width="0dp"
+            android:layout_marginLeft="20dp"
+            android:layout_height="@dimen/edit_text_height"
+            app:layout_constraintLeft_toRightOf="@id/tv_gender"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/et_name" />
 
