@@ -9,12 +9,22 @@
     tools:context=".fragments.MemberFragment">
 
     <com.example.carrendalapp.views.CircleImageView
-        android:layout_marginVertical="20dp"
         android:id="@+id/civ_profile"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
         android:src="@drawable/add_picture" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:text="姓名"
+        android:textSize="18sp" />
 
 
     <RelativeLayout

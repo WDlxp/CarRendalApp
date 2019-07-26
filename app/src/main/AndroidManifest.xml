@@ -14,10 +14,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/CustomAppTheme">
+        <activity android:name=".AccountActivity" android:parentActivityName=".MainActivity"></activity>
         <activity
             android:name=".MyAppointmentActivity"
-            android:parentActivityName=".MainActivity"></activity>
-        <activity android:name=".LoginActivity"></activity>
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".LoginActivity" />
         <activity android:name=".RegisterActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,7 +28,22 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTop"></activity>
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".AboutActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".ReleaseActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".ReviewActivity"
+            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>
