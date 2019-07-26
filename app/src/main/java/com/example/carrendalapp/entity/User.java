@@ -1,9 +1,14 @@
 package com.example.carrendalapp.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
+ * 这边实现序列化的接口用于传递对象
+ *
  * @author WD
  */
-public class User {
+public class User implements Parcelable {
     private String imageName;
     private String account;
     private String password;
@@ -21,6 +26,28 @@ public class User {
         this.tel = tel;
         this.manager = manager;
     }
+
+    protected User(Parcel in) {
+        imageName = in.readString();
+        account = in.readString();
+        password = in.readString();
+        name = in.readString();
+        gender = in.readInt();
+        tel = in.readString();
+        manager = in.readInt();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public String getImageName() {
         return imageName;
@@ -48,5 +75,21 @@ public class User {
 
     public boolean isManager() {
         return manager == 0;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(imageName);
+        parcel.writeString(account);
+        parcel.writeString(password);
+        parcel.writeString(name);
+        parcel.writeInt(gender);
+        parcel.writeString(tel);
+        parcel.writeInt(manager);
     }
 }
