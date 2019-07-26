@@ -10,8 +10,8 @@
 
     <com.example.carrendalapp.views.CircleImageView
         android:id="@+id/iv_profile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
         android:layout_marginTop="20dp"
         android:src="@drawable/add_picture"
         app:layout_constraintBottom_toTopOf="@id/et_account"

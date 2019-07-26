@@ -1,19 +1,13 @@
 package com.example.carrendalapp;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -25,12 +19,25 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.carrendalapp.config.URL;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.carrendalapp.config.UrlAddress;
 import com.example.carrendalapp.entity.User;
 import com.example.carrendalapp.utils.ActionBarAndStatusBarUtil;
 import com.example.carrendalapp.utils.ImageUtil;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * 注册页面
@@ -41,12 +48,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     private ImageView ivProfile;
     private TextView tvToLogin;
-    private Handler mHandler = new ImageHandler();
     private Spinner spGender;
     private String[] genderData = new String[]{"男", "女", "保密"};
     private EditText etAccount, etPassword, etPasswordAgain, etName, etTel;
     private Button btnRegister;
     private String imagePath = null;
+    private String imageName = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +85,57 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         tvToLogin.setOnClickListener(this);
 
         btnRegister.setOnClickListener(this);
+        //监听账号EditText的焦点，失去焦点的时候检查账号是否存在
+        etAccount.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (!b) {
+                    final String account = etAccount.getText().toString();
+                    if (!account.isEmpty()) {
+                        new CheckAccountTask().execute(account);
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * 检查账号是否已经存在的Task
+     */
+    private class CheckAccountTask extends AsyncTask<String, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(String... strings) {
+            String account = strings[0];
+            //进行后台操作
+            int result = 0;
+            try {
+                URL url = new URL(UrlAddress.CHECK_USER_URL + "?account=" + account);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                Log.d("Add Data", url.toString());
+                InputStream inputStream = urlConnection.getInputStream();
+                //缓冲区结合
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String line = bufferedReader.readLine();
+                JSONObject object = new JSONObject(line);
+                result = object.getInt("result");
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(Integer integer) {
+            if (integer == 0) {
+                Toast.makeText(RegisterActivity.this, "账号已存在", Toast.LENGTH_SHORT).show();
+                etAccount.requestFocus();
+            }
+        }
     }
 
     private void findViews() {
@@ -113,25 +171,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         cursor.close();
                     }
                 }
-
                 if (imagePath != null) {
-                    final String finalImagePath = imagePath;
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            super.run();
-                            //这里的path就是那个地址的全局变量
-                            File file = new File(finalImagePath);
-                            String RequestURL = URL.UPLOAD_IMAGE_URL;
-                            String result = ImageUtil.uploadFile(file, RequestURL);
-//                        String imagePath = URL.MAIN_URL + result;
-//                        Bitmap bitmap=ImageUtil.downloadImg(imagePath);
-                            Message message = new Message();
-                            message.what = 0;
-                            mHandler.sendMessage(message);
-                            Log.d("UploadImage", result);
-                        }
-                    }.start();
+                    new UploadImageTask().execute(imagePath);
                 }
             }
         }
@@ -168,12 +209,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         String name = etName.getText().toString();
         int gender = spGender.getSelectedItemPosition();
         String tel = etTel.getText().toString();
-//        if (imagePath == null) {
-//            Toast.makeText(RegisterActivity.this, "请选择头像", Toast.LENGTH_SHORT).show();
-//        } else
-        Toast.makeText(RegisterActivity.this, "性别代码："+gender, Toast.LENGTH_SHORT).show();
-        if (account.isEmpty()) {
+        //判断数据的完整性
+        if (imagePath == null) {
+            Toast.makeText(RegisterActivity.this, "请选择头像", Toast.LENGTH_SHORT).show();
+        } else if (account.isEmpty()) {
             Toast.makeText(RegisterActivity.this, "账号不能为空", Toast.LENGTH_SHORT).show();
+            //跳转到数据为空处方便用户填写
             etAccount.requestFocus();
         } else if (password.isEmpty()) {
             Toast.makeText(RegisterActivity.this, "密码不能为空", Toast.LENGTH_SHORT).show();
@@ -191,29 +232,89 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             Toast.makeText(RegisterActivity.this, "电话号码不正确", Toast.LENGTH_SHORT).show();
             etTel.requestFocus();
         } else {
-            Toast.makeText(RegisterActivity.this, "信息验证成功", Toast.LENGTH_SHORT).show();
-            User user = new User(imagePath, account, password, name, gender, tel, 1);
+//            Toast.makeText(RegisterActivity.this, "信息验证成功", Toast.LENGTH_SHORT).show();
+            final User user = new User(imageName, account, password, name, gender, tel, 1);
+            new InsertUserTask().execute(user);
         }
     }
 
-    @SuppressLint("HandlerLeak")
-    private class ImageHandler extends Handler {
+    /**
+     * 插入用户的Task
+     */
+    private class InsertUserTask extends AsyncTask<User, Void, Integer> {
+        private User user = null;
+
         @Override
-        public void handleMessage(@NonNull Message msg) {
-            super.handleMessage(msg);
-            if (msg.what == 0) {
-                Toast.makeText(RegisterActivity.this, "图片上传成功", Toast.LENGTH_SHORT).show();
-////                String imagePath = URL.MAIN_URL + msg.obj;
-//                Bitmap bitmap= (Bitmap) msg.obj;
-////                Log.d("ImagePath",imagePath);
-//                if (bitmap!=null){
-//                    ivProfile.setImageBitmap(bitmap);
-//                    Log.d("Image","图片不为空");
-//                }else {
-//                    Log.d("Image","图片为空");
-//                }
+        protected Integer doInBackground(User... users) {
+            user = users[0];
+            URL url = null;
+            int result = 0;
+            try {
+                url = new URL(UrlAddress.INSERT_USER_URL + "?image=" + user.getImageName() + "&account=" + user.getAccount() + "&password=" + user.getPassword() + "&name=" + user.getName() + "&gender=" + user.getGender() + "&tel=" + user.getTel());
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                Log.d("Add Data", url.toString());
+                InputStream inputStream = urlConnection.getInputStream();
+                //缓冲区结合
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String line = bufferedReader.readLine();
+                JSONObject object = new JSONObject(line);
+                result = object.getInt("result");
+                if (result > 0) {
+                    Log.d("ChangeData", "数据添加到后台数据库成功");
+                }
+                bufferedReader.close();
+                inputStream.close();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(Integer integer) {
+            super.onPostExecute(integer);
+            if (integer == 1) {
+                Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                intent.putExtra("imageName", imageName);
+                intent.putExtra("account", user.getAccount());
+                intent.putExtra("password", user.getPassword());
+                startActivity(intent);
+            } else {
+                Toast.makeText(RegisterActivity.this, "注册失败请再尝试一次", Toast.LENGTH_LONG).show();
             }
         }
     }
 
+    /**
+     * 上传图片的Task
+     */
+    private class UploadImageTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String imagePath = strings[0];
+            //这里的path就是那个地址的全局变量
+            File file = new File(imagePath);
+            String requestUrl = UrlAddress.UPLOAD_IMAGE_URL;
+            //                        String imagePath = URL.BASE_URL + result;
+//                        Bitmap bitmap=ImageUtil.downloadImg(imagePath);
+            return ImageUtil.uploadFile(file, requestUrl);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (s == null) {
+                Toast.makeText(RegisterActivity.this, "图片上传失败", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(RegisterActivity.this, "图片上传成功", Toast.LENGTH_SHORT).show();
+                imageName = s;
+            }
+            super.onPostExecute(s);
+        }
+    }
 }
