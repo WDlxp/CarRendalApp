@@ -32,6 +32,7 @@ public class MyAppointmentActivity extends AppCompatActivity {
 
     private TabLayout tlTabs;
     private ArrayList<String> titles;
+    private ActionBarAndStatusBarUtil actionBarAndStatusBarUtil=new ActionBarAndStatusBarUtil();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +47,9 @@ public class MyAppointmentActivity extends AppCompatActivity {
      * 初始化Tab页面
      */
     private void initViews() {
-        ActionBarAndStatusBarUtil.initActionBarAndStatusBar(getWindow(), getSupportActionBar());
-        ActionBarAndStatusBarUtil.setTitle("我的预约");
-        ActionBarAndStatusBarUtil.showBackButton();
+        actionBarAndStatusBarUtil.initActionBarAndStatusBar(getWindow(), getSupportActionBar());
+        actionBarAndStatusBarUtil.setTitle("我的预约");
+        actionBarAndStatusBarUtil.showBackButton();
 
         //设置ViewPager的Title之后TabLayout绑定后通过获取PageTitle作为Tab的文字
         titles = new ArrayList<>(fragmentList.size());

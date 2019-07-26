@@ -55,13 +55,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private String imagePath = null;
     private String imageName = null;
 
+    private ActionBarAndStatusBarUtil actionBarAndStatusBarUtil=new ActionBarAndStatusBarUtil();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         //初始化标题栏与状态栏
-        ActionBarAndStatusBarUtil.initActionBarAndStatusBar(getWindow(), getSupportActionBar());
-        ActionBarAndStatusBarUtil.setTitle("注册页");
+        actionBarAndStatusBarUtil.initActionBarAndStatusBar(getWindow(), getSupportActionBar());
+        actionBarAndStatusBarUtil.setTitle("注册页");
 
         //绑定控件
         findViews();

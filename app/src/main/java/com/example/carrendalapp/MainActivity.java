@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,12 +35,13 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private ArrayList<String> titles;
 
+    private ActionBarAndStatusBarUtil actionBarAndStatusBarUtil=new ActionBarAndStatusBarUtil();
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.d("MainActivity","onCreate");
+        Log.d("MainActivity", "onCreate");
         //绑定布局
         findViews();
         //将Fragment放入List中
@@ -53,9 +55,13 @@ public class MainActivity extends AppCompatActivity {
         //设置监听事件
         setListeners();
         //初始化ActionBar和Status使得状态栏同时标题栏居中的工具类
-        ActionBarAndStatusBarUtil.initActionBarAndStatusBar(getWindow(), getSupportActionBar());
-        ActionBarAndStatusBarUtil.setTitle("租车");
+        actionBarAndStatusBarUtil.initActionBarAndStatusBar(getWindow(), getSupportActionBar());
+        actionBarAndStatusBarUtil.setTitle("租车");
+        //设置底部导航栏的背景颜色与阴影效果
+        bottomNavigationView.setElevation(1f);
+        bottomNavigationView.setBackgroundColor(Color.WHITE);
     }
+
     private void setListeners() {
         //设置viewPager监听来同步BottomNavigationView的选中效果
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -70,9 +76,9 @@ public class MainActivity extends AppCompatActivity {
                 bottomNavigationView.getMenu().getItem(position).setChecked(true);
                 //修改标题栏
                 if (position == 0) {
-                    ActionBarAndStatusBarUtil.setTitle("租车");
+                   actionBarAndStatusBarUtil.setTitle("租车");
                 } else {
-                    ActionBarAndStatusBarUtil.setTitle("我的");
+                    actionBarAndStatusBarUtil.setTitle("我的");
                 }
             }
 

@@ -37,7 +37,7 @@ import java.net.URL;
  */
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private TextView tvToRegister;
+    private TextView tvToRegister, tvForgetPassword;
     private Button btnLogin;
     private CircleImageView civProfile;
     private EditText etAccount, etPassword;
@@ -47,8 +47,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        ActionBarAndStatusBarUtil.initActionBarAndStatusBar(getWindow(), getSupportActionBar());
-        ActionBarAndStatusBarUtil.setTitle("登录页");
+        //初始化标题栏和状态栏
+        ActionBarAndStatusBarUtil actionBarAndStatusBarUtil=new ActionBarAndStatusBarUtil();
+        actionBarAndStatusBarUtil.initActionBarAndStatusBar(getWindow(), getSupportActionBar());
+        actionBarAndStatusBarUtil.setTitle("登录页");
 
         findViews();
         setListeners();
@@ -61,7 +63,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String imageName = intent.getStringExtra("imageName");
         String account = intent.getStringExtra("account");
         String password = intent.getStringExtra("password");
-        Toast.makeText(LoginActivity.this, "接收到的信息：" + imageName + account + password, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(LoginActivity.this, "接收到的信息：" + imageName + account + password, Toast.LENGTH_SHORT).show();
         if (imageName != null) {
             new DownloadImageTask().execute(imageName);
         }
@@ -106,6 +108,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
             }
         });
+
+        tvForgetPassword.setOnClickListener(this);
     }
 
     private void findViews() {
@@ -115,6 +119,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         etAccount = findViewById(R.id.et_account);
         etPassword = findViewById(R.id.et_password);
+
+        tvForgetPassword = findViewById(R.id.tv_to_forget_password);
     }
 
     @Override
@@ -139,6 +145,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 } else {
                     new CheckPasswordTask().execute(account, password);
                 }
+                break;
+            case R.id.tv_to_forget_password:
+
                 break;
             default:
 
