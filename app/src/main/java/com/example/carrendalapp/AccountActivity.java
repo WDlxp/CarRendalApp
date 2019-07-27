@@ -52,9 +52,14 @@ public class AccountActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //清空账号信息
                 SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
-                //存储数据
+                //清空账号的数据
                 editor.putString("account", null);
+                editor.apply();
+                //跳转回登录页
                 Intent intent = new Intent(AccountActivity.this, LoginActivity.class);
+                //清空任务栈
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
             }

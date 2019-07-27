@@ -43,4 +43,7 @@
         <item name="colorControlActivated">@android:color/holo_blue_light</item>
     </style>
 
+    <style name="WelcomeActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:statusBarColor">@android:color/white</item>
+    </style>
 </resources>

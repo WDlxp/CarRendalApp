@@ -16,8 +16,17 @@
         android:supportsRtl="true"
         android:theme="@style/CustomAppTheme">
         <activity
+            android:name=".WelcomeActivity"
+            android:theme="@style/WelcomeActivityTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".ForgetPasswordActivity"
-            android:parentActivityName=".LoginActivity"></activity>
+            android:parentActivityName=".LoginActivity" />
         <activity
             android:name=".AccountActivity"
             android:parentActivityName=".MainActivity" />
@@ -27,22 +36,10 @@
         <activity
             android:name=".LoginActivity"
             android:launchMode="singleTop" />
-        <activity android:name=".RegisterActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".RegisterActivity"></activity>
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTop">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:launchMode="singleTop"></activity>
         <activity
             android:name=".AboutActivity"
             android:parentActivityName=".MainActivity" />
@@ -52,6 +49,9 @@
         <activity
             android:name=".CheckActivity"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".UserCheckActivity" android:parentActivityName=".MainActivity"></activity>
+        <activity
+            android:name=".UserCheckActivity"
+            android:parentActivityName=".MainActivity" />
     </application>
+
 </manifest>
