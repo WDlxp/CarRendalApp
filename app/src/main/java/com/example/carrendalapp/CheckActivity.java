@@ -12,13 +12,17 @@ import com.example.carrendalapp.utils.ActionBarAndStatusBarUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReviewActivity extends AppCompatActivity {
+/**
+ * @author WD
+ */
+public class CheckActivity extends AppCompatActivity {
 
 
     private ListView lvReview;
     private List<Review> reviewList = new ArrayList<>();
 
-    private ActionBarAndStatusBarUtil actionBarAndStatusBarUtil=new ActionBarAndStatusBarUtil();
+    private ActionBarAndStatusBarUtil actionBarAndStatusBarUtil = new ActionBarAndStatusBarUtil();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +31,7 @@ public class ReviewActivity extends AppCompatActivity {
         actionBarAndStatusBarUtil.setTitle("管理员审核");
         actionBarAndStatusBarUtil.showBackButton();
 
-        lvReview = findViewById(R.id.lv_review);
+//        lvReview = findViewById(R.id.lv_check);
 
         Review review = new Review("张三", "闽D12345", "奔驰", "2019.07.24.12：00-2019.08.20.12:00");
         Review review1 = new Review("李四", "闽D26541", "丰田", "2019.07.20.12：00-2019.08.22.12:00");
@@ -37,8 +41,8 @@ public class ReviewActivity extends AppCompatActivity {
         reviewList.add(review1);
         reviewList.add(review2);
 
-        ReviewAdapter reviewAdapter = new ReviewAdapter(ReviewActivity.this, R.layout.activity_review_adapter, reviewList);
-        lvReview.setAdapter(reviewAdapter);
+//        ReviewAdapter reviewAdapter = new ReviewAdapter(CheckActivity.this, R.layout.activity_review_adapter, reviewList);
+//        lvReview.setAdapter(reviewAdapter);
     }
     //gradlew ProcessApplicationManifest --stacktrace
 }

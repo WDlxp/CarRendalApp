@@ -2,16 +2,34 @@ package com.example.carrendalapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.carrendalapp.config.UrlAddress;
+import com.example.carrendalapp.entity.User;
 import com.example.carrendalapp.utils.ActionBarAndStatusBarUtil;
+import com.example.carrendalapp.utils.ImageUtil;
+import com.example.carrendalapp.views.CircleImageView;
 
 /**
  * @author WD
  */
 public class AccountActivity extends AppCompatActivity {
 
-    private ActionBarAndStatusBarUtil actionBarAndStatusBarUtil=new ActionBarAndStatusBarUtil();
+    private CircleImageView civProfile;
+    private TextView tvToLogin;
+    private EditText etAccount, etPassword, etName, etGender, etTel;
+    private Button btnLoginOut;
+    private ActionBarAndStatusBarUtil actionBarAndStatusBarUtil = new ActionBarAndStatusBarUtil();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,5 +37,104 @@ public class AccountActivity extends AppCompatActivity {
         actionBarAndStatusBarUtil.initActionBarAndStatusBar(getWindow(), getSupportActionBar());
         actionBarAndStatusBarUtil.setTitle("账号信息");
         actionBarAndStatusBarUtil.showBackButton();
+
+
+        findViews();
+        setListeners();
+        //初始化页面
+        initViews();
+    }
+
+    private void setListeners() {
+        //退出登录，返回登录页
+        btnLoginOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //清空账号信息
+                SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
+                //存储数据
+                editor.putString("account", null);
+                Intent intent = new Intent(AccountActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+    }
+
+    private void findViews() {
+        civProfile = findViewById(R.id.iv_profile);
+        etAccount = findViewById(R.id.et_account);
+        etPassword = findViewById(R.id.et_password);
+        etName = findViewById(R.id.et_name);
+        etGender = findViewById(R.id.et_gender);
+        etTel = findViewById(R.id.et_tel);
+
+        btnLoginOut = findViewById(R.id.btn_login_out);
+    }
+
+    private void initViews() {
+        civProfile.setClickable(false);
+        etAccount.setFocusable(false);
+        etPassword.setFocusable(false);
+        etName.setFocusable(false);
+        etGender.setFocusable(false);
+        etTel.setFocusable(false);
+
+        SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
+        User user = new User(
+                sp.getString("imageName", null),
+                sp.getString("account", null),
+                sp.getString("password", null),
+                sp.getString("name", null),
+                sp.getInt("gender", 2),
+                sp.getString("tel", null),
+                sp.getInt("manager", 1)
+        );
+
+
+        //如果图片不为空的时候
+        if (!user.getImageName().equals("null") && user.getImageName() != null) {
+            Toast.makeText(AccountActivity.this, "下载头像", Toast.LENGTH_SHORT).show();
+            new DownloadImageTask(civProfile).execute(user.getImageName());
+        }
+        etName.setText(user.getName());
+        etAccount.setText(user.getAccount());
+        etPassword.setText(user.getPassword());
+        if (user.getGender() == 0) {
+            etGender.setText("男");
+        } else if (user.getGender() == 1) {
+            etGender.setText("女");
+        } else {
+            etGender.setText("保密");
+        }
+        etTel.setText(user.getTel());
+
+    }
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        private CircleImageView civProfile;
+
+        public DownloadImageTask(CircleImageView civProfile) {
+            this.civProfile = civProfile;
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... strings) {
+            if (strings[0] != null) {
+                String imagePath = UrlAddress.BASE_URL + strings[0];
+                return ImageUtil.downloadImg(imagePath);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            super.onPostExecute(bitmap);
+            if (bitmap != null) {
+                civProfile.setImageBitmap(bitmap);
+            } else {
+//                Toast.makeText(AccountActivity.this, "头像下载失败", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

@@ -261,7 +261,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             //进行后台操作
             int result = 0;
             try {
-                URL url = new URL(UrlAddress.CHECK_USER_URL + "?account=" + account);
+                URL url = new URL(UrlAddress.CHECK_USER_URL + "?operation=check&account=" + account);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 Log.d("Add Data", url.toString());
                 InputStream inputStream = urlConnection.getInputStream();

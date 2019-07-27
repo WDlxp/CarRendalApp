@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".AboutActivity">
+
+    <TextView
+        android:id="@+id/tv_about1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/about_us_message"
+        android:textSize="25sp"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_about2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ConsumerTel"
+        android:textColor="@android:color/black"
+        android:textSize="25sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_about1" />
+
+    <TextView
+        android:id="@+id/tv_tel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/tel_number"
+        android:textColor="@android:color/holo_blue_light"
+        android:textSize="26sp"
+        app:layout_constraintLeft_toRightOf="@id/tv_about2"
+        app:layout_constraintTop_toBottomOf="@id/tv_about1" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

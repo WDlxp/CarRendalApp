@@ -77,6 +77,10 @@ public class User implements Parcelable {
         return manager == 0;
     }
 
+    public int getManager() {
+        return manager;
+    }
+
     @Override
     public int describeContents() {
         return 0;

@@ -10,4 +10,6 @@
     <string name="tel_number">1895-922-3364</string>
     <string name="ConsumerTel">客服电话：</string>
     <string name="about_us_message">请电话联系到租车软件的客服人员,进行相关的软件使用咨询和人工预约。</string>
+    <string name="check_state">审核进度</string>
+    <string name="submit">确认提交</string>
 </resources>

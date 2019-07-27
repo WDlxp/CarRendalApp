@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
@@ -126,14 +127,14 @@ public class ImageUtil {
     /**
      * 保存文件到指定路径
      */
-    public void saveMyBitmap(Context context, Bitmap bitmap) {
+    public static void saveMyBitmap(Context context, Bitmap bitmap, String fileName) {
         String sdCardDir = Environment.getExternalStorageDirectory() + "/pic/";
         File appDir = new File(sdCardDir);
         //不存在
         if (!appDir.exists()) {
             appDir.mkdir();
         }
-        String fileName = "a.jpg";
+//        String fileName = "a.jpg";
         File file = new File(appDir, fileName);
         try {
             FileOutputStream fos = new FileOutputStream(file);
@@ -145,11 +146,7 @@ public class ImageUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        Uri uri = Uri.fromFile(file);
-        intent.setData(uri);
-        context.sendBroadcast(intent);
-        Toast.makeText(context, "图片保存成功", Toast.LENGTH_SHORT).show();
+        Log.d("SaveImage", "Successful");
     }
 
     /**

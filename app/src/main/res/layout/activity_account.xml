@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".AccountActivity">
+
+    <com.example.carrendalapp.views.CircleImageView
+        android:id="@+id/iv_profile"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/add_picture"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_account"
+        style="@style/LoginTextViewStyle"
+        android:text=" 账        号"
+        app:layout_constraintBaseline_toBaselineOf="@+id/et_account"
+        app:layout_constraintRight_toRightOf="@id/tv_password_again" />
+
+    <EditText
+        android:id="@+id/et_account"
+        style="@style/LoginEditTextStyle"
+        android:layout_marginTop="20dp"
+        android:hint="请输入账号"
+        android:maxLength="25"
+        android:theme="@style/LoginEditTextStyle"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_profile" />
+
+    <TextView
+        android:id="@+id/tv_password"
+        style="@style/LoginTextViewStyle"
+        android:text=" 密        码"
+        app:layout_constraintBaseline_toBaselineOf="@+id/et_password"
+        app:layout_constraintRight_toRightOf="@id/tv_password_again" />
+
+    <EditText
+        android:id="@+id/et_password"
+        style="@style/LoginEditTextStyle"
+        android:hint="请输入密码"
+        android:inputType="textPassword"
+        android:maxLength="16"
+        android:theme="@style/LoginEditTextStyle"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_account" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        style="@style/LoginTextViewStyle"
+        android:text=" 姓        名"
+        app:layout_constraintBaseline_toBaselineOf="@+id/et_name"
+        app:layout_constraintRight_toRightOf="@id/tv_password" />
+
+    <EditText
+        android:id="@+id/et_name"
+        style="@style/LoginEditTextStyle"
+        android:hint="请输入姓名"
+        android:maxLength="25"
+        android:theme="@style/LoginEditTextStyle"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_password" />
+
+    <TextView
+        android:id="@+id/tv_gender"
+        style="@style/LoginTextViewStyle"
+        android:text=" 性        别"
+        app:layout_constraintBaseline_toBaselineOf="@+id/et_gender"
+        app:layout_constraintRight_toRightOf="@id/tv_password_again" />
+
+    <EditText
+        android:id="@+id/et_gender"
+        style="@style/LoginEditTextStyle"
+        android:focusable="false"
+        android:hint="性别"
+        android:theme="@style/LoginEditTextStyle"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_name" />
+
+    <TextView
+        android:id="@+id/tv_tel"
+        style="@style/LoginTextViewStyle"
+        android:text="手机号码"
+        app:layout_constraintBaseline_toBaselineOf="@+id/et_tel"
+        app:layout_constraintRight_toRightOf="@id/tv_password_again" />
+
+    <EditText
+        android:id="@+id/et_tel"
+        style="@style/LoginEditTextStyle"
+        android:hint="请输入手机号"
+        android:inputType="phone"
+        android:maxLength="11"
+        android:theme="@style/LoginEditTextStyle"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_gender" />
+
+    <Button
+        android:id="@+id/btn_login_out"
+        style="@style/circleButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginHorizontal="50dp"
+        android:layout_marginTop="10dp"
+        android:stateListAnimator="@null"
+        android:text="退出登录"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_tel" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

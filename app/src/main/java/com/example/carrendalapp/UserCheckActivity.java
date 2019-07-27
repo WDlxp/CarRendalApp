@@ -1,65 +1,71 @@
-package com.example.carrendalapp.fragments;
-
+package com.example.carrendalapp;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.carrendalapp.R;
-import com.example.carrendalapp.adapters.AppointAdapter;
+import com.example.carrendalapp.adapters.CheckAdapter;
 import com.example.carrendalapp.entity.CarOrder;
+import com.example.carrendalapp.utils.ActionBarAndStatusBarUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- *
- * @author WD
- */
-public class HomePageFragment extends Fragment {
-    ListView lv_first;
-    List<CarOrder> carList = new ArrayList<>();//存储汽车类数组
+public class UserCheckActivity extends AppCompatActivity {
 
+    private ListView lv_checklist;
+    private List<CarOrder> carList = new ArrayList<>();//存储汽车类数组
 
-    public HomePageFragment() {
-        // Required empty public constructor
+    private ActionBarAndStatusBarUtil actionBarAndStatusBarUtil=new ActionBarAndStatusBarUtil();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        actionBarAndStatusBarUtil.initActionBarAndStatusBar(getWindow(), getSupportActionBar());
+        actionBarAndStatusBarUtil.setTitle("审核");
+        actionBarAndStatusBarUtil.showBackButton();
+        setContentView(R.layout.activity_user_check);
+        lv_checklist = (ListView) findViewById(R.id.lv_checklist);
+        showCarcheck();//相当于查询
     }
-
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_home_page, container, false);
-        lv_first = view.findViewById(R.id.lv_first);
-        showFirstcar();
-        return view;
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.refresh, menu);
+        return true;
     }
 
-    public void showFirstcar() {
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int shuaxin = item.getItemId();
+        if (shuaxin == R.id.refresh) {
+            showCarcheck();
+            Toast.makeText(UserCheckActivity.this, "刷新成功！", Toast.LENGTH_SHORT).show();
+        }
+        return true;
+    }
 
+
+    public void showCarcheck() {//将后台数据库表中的相关信息反馈到前端展示
         String name = "11";
         String carnumber = "1111111";
         String carbrand = "ww12245";
         String freetime = "2019-07-20-8:00 2019-07-30-9:00 2019-07-20-8:00 2019-07-30-9:00 2019-07-20-8:00 2019-07-30-9:00";
-        //String potel = object1.getString("tel");//获取车主电话号码
-
-
-        CarOrder car = new CarOrder(name, carnumber, carbrand, freetime, null, null, 0, 3);//将信息存进实体类
+        String potel = "11111111111";
+        int check = 1;
+        CarOrder car = new CarOrder(name, carnumber, carbrand, freetime, null, potel, check, 4);//将信息存进实体类
         carList.add(car);//将实体类信息存进数组
-        AppointAdapter appointAdapter = new AppointAdapter(//适配器
-                getContext(),
-                R.layout.layout_myappoint,
+        CheckAdapter checkAdapter = new CheckAdapter(//适配器
+                UserCheckActivity.this,
+                R.layout.layout_usercheck,
                 carList);
-        lv_first.setAdapter(appointAdapter);//将信息放入lv_list显示出来
+        lv_checklist.setAdapter(checkAdapter);//将信息放入lv_list显示出来
 //        new Thread() {
 //            @Override
 //            public void run() {
@@ -84,10 +90,10 @@ public class HomePageFragment extends Fragment {
 //                            String carnumber = object1.getString("carNumber");//获取车牌号
 //                            String carbrand = object1.getString("carBrand");//获取车辆型号
 //                            String freetime = object1.getString("freeTime");//获取车辆空闲时间
-//                            //String potel = object1.getString("tel");//获取车主电话号码
+//                            String potel = object1.getString("tel");//获取车主电话号码
+//                            int check = object1.getInt("check");//获取车辆审核情况
 //
-//
-//                            Car car = new Car(name, carnumber, carbrand, freetime, null, null, 0, 3);//将信息存进实体类
+//                            Car car = new Car(name, carnumber, carbrand, freetime, null, potel, check, 4);//将信息存进实体类
 //                            carList.add(car);//将实体类信息存进数组
 //                        }
 //
@@ -116,12 +122,14 @@ public class HomePageFragment extends Fragment {
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
             if (msg.what == 1) {
-                AppointAdapter appointAdapter = new AppointAdapter(//适配器
-                        getContext(),
-                        R.layout.layout_myappoint,
+                CheckAdapter checkAdapter = new CheckAdapter(//适配器
+                        UserCheckActivity.this,
+                        R.layout.layout_usercheck,
                         carList);
-                lv_first.setAdapter(appointAdapter);//将信息放入lv_list显示出来
+                lv_checklist.setAdapter(checkAdapter);//将信息放入lv_list显示出来
             }
         }
     };
+
+
 }

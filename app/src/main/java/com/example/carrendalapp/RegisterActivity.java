@@ -115,7 +115,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             //进行后台操作
             int result = 0;
             try {
-                URL url = new URL(UrlAddress.CHECK_USER_URL + "?account=" + account);
+                URL url = new URL(UrlAddress.CHECK_USER_URL + "?operation=check&account=" + account);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 Log.d("Add Data", url.toString());
                 InputStream inputStream = urlConnection.getInputStream();
@@ -154,7 +154,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         spGender = findViewById(R.id.sp_gender);
         etTel = findViewById(R.id.et_tel);
 
-        btnRegister = findViewById(R.id.btn_register);
+        btnRegister = findViewById(R.id.btn_login_out);
 
         pbRegister = findViewById(R.id.pb_register);
     }
@@ -202,7 +202,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 startActivity(intent);
                 finish();
                 break;
-            case R.id.btn_register:
+            case R.id.btn_login_out:
                 checkAndRegister();
                 break;
             default:
@@ -217,9 +217,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         int gender = spGender.getSelectedItemPosition();
         String tel = etTel.getText().toString();
         //判断数据的完整性
-        if (imagePath == null) {
-            Toast.makeText(RegisterActivity.this, "请选择头像", Toast.LENGTH_SHORT).show();
-        } else if (account.isEmpty()) {
+//        if (imagePath == null) {
+//            Toast.makeText(RegisterActivity.this, "请选择头像", Toast.LENGTH_SHORT).show();
+//        } else
+        if (account.isEmpty()) {
             Toast.makeText(RegisterActivity.this, "账号不能为空", Toast.LENGTH_SHORT).show();
             //跳转到数据为空处方便用户填写
             etAccount.requestFocus();
@@ -274,7 +275,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             URL url = null;
             int result = 0;
             try {
-                url = new URL(UrlAddress.INSERT_USER_URL + "?image=" + user.getImageName() + "&account=" + user.getAccount() + "&password=" + user.getPassword() + "&name=" + user.getName() + "&gender=" + user.getGender() + "&tel=" + user.getTel());
+                url = new URL(UrlAddress.INSERT_USER_URL + "?operation=insert&image=" + user.getImageName() + "&account=" + user.getAccount() + "&password=" + user.getPassword() + "&name=" + user.getName() + "&gender=" + user.getGender() + "&tel=" + user.getTel());
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 Log.d("Add Data", url.toString());
                 InputStream inputStream = urlConnection.getInputStream();

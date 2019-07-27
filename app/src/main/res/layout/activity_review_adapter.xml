@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".adapters.ReviewAdapter">
+
+    <TextView
+        android:id="@+id/tv_biaoti1"
+        android:layout_width="48dp"
+        android:layout_height="36dp"
+        android:text="审核"
+        tools:layout_editor_absoluteX="176dp"
+        tools:layout_editor_absoluteY="16dp"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="398dp"
+        android:layout_height="102dp"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="76dp"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/imgv_chezhu"
+        android:layout_width="71dp"
+        android:layout_height="71dp"
+        app:srcCompat="@drawable/add_picture"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="90dp"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="车主姓名"
+        tools:layout_editor_absoluteX="98dp"
+        tools:layout_editor_absoluteY="83dp"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/tv_chepai1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="车牌："
+        tools:layout_editor_absoluteX="98dp"
+        tools:layout_editor_absoluteY="113dp"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/tv_chepaihao1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="车主车牌号"
+        tools:layout_editor_absoluteX="140dp"
+        tools:layout_editor_absoluteY="113dp"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/tv_chexing1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="车型："
+        tools:layout_editor_absoluteX="224dp"
+        tools:layout_editor_absoluteY="113dp"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/tv_chexinghao1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="车主车型"
+        tools:layout_editor_absoluteX="266dp"
+        tools:layout_editor_absoluteY="113dp"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/tv_freetime1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="空闲时间："
+        tools:layout_editor_absoluteX="98dp"
+        tools:layout_editor_absoluteY="148dp"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="车主空闲时间"
+        tools:layout_editor_absoluteX="168dp"
+        tools:layout_editor_absoluteY="147dp"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/btn_shenhe"
+        android:layout_width="71dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="50dp"
+        android:background="@drawable/btn_small_circle_bg"
+        android:text="审核"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/register_text_size"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="334dp"
+        tools:layout_editor_absoluteY="99dp" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,7 +7,10 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,10 +18,12 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.carrendalapp.adapters.MyViewPagerAdapter;
+import com.example.carrendalapp.config.UrlAddress;
 import com.example.carrendalapp.entity.User;
 import com.example.carrendalapp.fragments.HomePageFragment;
 import com.example.carrendalapp.fragments.MemberFragment;
 import com.example.carrendalapp.utils.ActionBarAndStatusBarUtil;
+import com.example.carrendalapp.utils.ImageUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -39,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> titles;
 
     private ActionBarAndStatusBarUtil actionBarAndStatusBarUtil = new ActionBarAndStatusBarUtil();
+    private Bitmap profileImage = null;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -72,11 +78,29 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setElevation(1f);
         bottomNavigationView.setBackgroundColor(Color.WHITE);
 
+        //获取传递过来的账号数据
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         if (bundle != null) {
+            //说明数据传递成功
             User user = bundle.getParcelable("data");
-            Toast.makeText(MainActivity.this, user.getAccount() + user.getName(), Toast.LENGTH_LONG).show();
+            SharedPreferences.Editor editor = getSharedPreferences("data", MODE_PRIVATE).edit();
+            //存储数据
+            editor.putString("imageName", user.getImageName());
+            editor.putString("account", user.getAccount());
+            editor.putString("password", user.getPassword());
+            editor.putString("name", user.getName());
+            editor.putInt("gender", user.getGender());
+            editor.putString("tel", user.getTel());
+            editor.putInt("manager", user.getManager());
+            //提交存储放回是否成功
+            boolean flag = editor.commit();
+            if (flag) {
+                Toast.makeText(MainActivity.this, "数据存储成功", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(MainActivity.this, "数据存储失败", Toast.LENGTH_SHORT).show();
+            }
+//            Toast.makeText(MainActivity.this, user.getAccount() + user.getName(), Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(MainActivity.this, "是空的", Toast.LENGTH_LONG).show();
         }
@@ -128,10 +152,6 @@ public class MainActivity extends AppCompatActivity {
     private void initFragmentList() {
         fragmentList.add(homePageFragment);
         fragmentList.add(memberFragment);
-
-//        titles = new ArrayList<>(fragmentList.size());
-//        titles.add("首页");
-//        titles.add("我的");
     }
 
     private void findViews() {

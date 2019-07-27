@@ -26,18 +26,21 @@
         <item name="android:layout_width">wrap_content</item>
     </style>
 
-    <style name="LoginEditTextStyle" parent="Theme.AppCompat.Light">
-        <item name="android:textSize">@dimen/register_text_size</item>
+    <style name="LoginEditTextStyle" parent="CustomEditTextStyle">
         <item name="android:paddingLeft">110dp</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/edit_text_height</item>
-        <item name="colorControlActivated">@android:color/holo_blue_light</item>
     </style>
 
     <style name="circleButtonStyle" parent="Theme.AppCompat.Light">
         <item name="android:textSize">@dimen/register_text_size</item>
         <item name="android:background">@drawable/btn_circle_bg</item>
         <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="CustomEditTextStyle" parent="Theme.AppCompat.Light">
+        <item name="android:textSize">@dimen/register_text_size</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/edit_text_height</item>
+        <item name="colorControlActivated">@android:color/holo_blue_light</item>
     </style>
 
 </resources>
