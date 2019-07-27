@@ -2,24 +2,36 @@ package com.example.carrendalapp.fragments;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.carrendalapp.AboutActivity;
 import com.example.carrendalapp.AccountActivity;
+import com.example.carrendalapp.MainActivity;
 import com.example.carrendalapp.MyAppointmentActivity;
 import com.example.carrendalapp.R;
 import com.example.carrendalapp.ReleaseActivity;
-import com.example.carrendalapp.ReviewActivity;
-import com.example.carrendalapp.entity.Review;
+import com.example.carrendalapp.CheckActivity;
+import com.example.carrendalapp.config.UrlAddress;
+import com.example.carrendalapp.utils.ImageUtil;
 import com.example.carrendalapp.views.CircleImageView;
+
+import java.io.File;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,9 +49,13 @@ public class MemberFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_member, container, false);
         CircleImageView circleImageView = view.findViewById(R.id.civ_profile);
+        TextView tvName = view.findViewById(R.id.tv_name);
+        TextView tvCheckMessage = view.findViewById(R.id.tv_check_message);
 
         RelativeLayout rlAppointment = view.findViewById(R.id.rl_appointment);
         RelativeLayout rlAboutUs = view.findViewById(R.id.rl_about_us);
@@ -51,6 +67,21 @@ public class MemberFragment extends Fragment implements View.OnClickListener {
         rlAboutUs.setOnClickListener(this);
         rlReleaseNews.setOnClickListener(this);
         rlCheck.setOnClickListener(this);
+
+        //取出SharedPreferences
+        SharedPreferences sp = getContext().getSharedPreferences("data", MODE_PRIVATE);
+        String imageName = sp.getString("imageName", null);
+        String name = sp.getString("account", null);
+        int manager = sp.getInt("manager", 1);
+        //如果图片不为空的时候
+        if (!imageName.equals("null") && imageName != null) {
+            new DownloadImageTask(circleImageView).execute(imageName);
+        }
+        tvName.setText("账号：" + name);
+        //根据是否为管理员显示不同的内容
+        if (manager == 0) {
+            tvCheckMessage.setText(R.string.check);
+        }
         return view;
     }
 
@@ -59,7 +90,7 @@ public class MemberFragment extends Fragment implements View.OnClickListener {
         Intent intent = null;
         switch (view.getId()) {
             case R.id.civ_profile:
-                intent=new Intent(getContext(), AccountActivity.class);
+                intent = new Intent(getContext(), AccountActivity.class);
                 break;
             case R.id.rl_appointment:
                 intent = new Intent(getContext(), MyAppointmentActivity.class);
@@ -71,10 +102,37 @@ public class MemberFragment extends Fragment implements View.OnClickListener {
                 intent = new Intent(getContext(), ReleaseActivity.class);
                 break;
             case R.id.rl_check:
-                intent = new Intent(getContext(), ReviewActivity.class);
+                intent = new Intent(getContext(), CheckActivity.class);
                 break;
             default:
         }
         startActivity(intent);
+    }
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        private CircleImageView civProfile;
+
+        public DownloadImageTask(CircleImageView civProfile) {
+            this.civProfile = civProfile;
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... strings) {
+            if (strings[0] != null) {
+                String imagePath = UrlAddress.BASE_URL + strings[0];
+                return ImageUtil.downloadImg(imagePath);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            super.onPostExecute(bitmap);
+            if (bitmap != null) {
+                civProfile.setImageBitmap(bitmap);
+            } else {
+                Toast.makeText(getContext(), "头像下载失败", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
