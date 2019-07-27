@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,11 +31,13 @@ import java.net.URL;
  */
 public class ForgetPasswordActivity extends AppCompatActivity {
 
-    private TextView tvTel;
+    private TextView tvTel, tvResetPassword;
     private EditText etInputTel, etPassword, etPasswordAgain;
     private String account, tel;
     private Button btnCheckTel, btnResetPassword;
     private ActionBarAndStatusBarUtil actionBarAndStatusBarUtil = new ActionBarAndStatusBarUtil();
+
+    private ProgressBar pbResetPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +110,9 @@ public class ForgetPasswordActivity extends AppCompatActivity {
         etPassword = findViewById(R.id.et_password);
         etPasswordAgain = findViewById(R.id.et_password_again);
         btnResetPassword = findViewById(R.id.btn_reset_password);
+
+        tvResetPassword = findViewById(R.id.tv_reset_password);
+        pbResetPassword = findViewById(R.id.pb_reset_password);
     }
 
     private void initViews() {
@@ -120,6 +126,19 @@ public class ForgetPasswordActivity extends AppCompatActivity {
     }
 
     private class UpdatePasswordTask extends AsyncTask<String, Void, Integer> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //显示重置中的提示
+            btnResetPassword.setVisibility(View.VISIBLE);
+            tvResetPassword.setVisibility(View.VISIBLE);
+            //进行重置前禁止修改内容
+            btnResetPassword.setClickable(false);
+
+            etPassword.setFocusable(false);
+            etPasswordAgain.setFocusable(false);
+        }
+
         @Override
         protected Integer doInBackground(String... strings) {
             String account = strings[0];
@@ -148,9 +167,19 @@ public class ForgetPasswordActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Integer integer) {
             super.onPostExecute(integer);
+            //隐藏加载的提示
+            pbResetPassword.setVisibility(View.GONE);
+            tvResetPassword.setVisibility(View.GONE);
             if (integer == 1) {
                 Toast.makeText(ForgetPasswordActivity.this, "密码重置成功", Toast.LENGTH_SHORT).show();
                 finish();
+            } else {
+                Toast.makeText(ForgetPasswordActivity.this, "密码重置失败，请重试", Toast.LENGTH_SHORT).show();
+                btnResetPassword.setClickable(true);
+                etPassword.setFocusable(true);
+                etPassword.setFocusableInTouchMode(true);
+                etPasswordAgain.setFocusable(true);
+                etPasswordAgain.setFocusableInTouchMode(true);
             }
         }
     }

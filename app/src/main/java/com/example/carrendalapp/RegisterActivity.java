@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,10 +53,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private String[] genderData = new String[]{"男", "女", "保密"};
     private EditText etAccount, etPassword, etPasswordAgain, etName, etTel;
     private Button btnRegister;
+    private ProgressBar pbRegister;
+
     private String imagePath = null;
     private String imageName = null;
 
-    private ActionBarAndStatusBarUtil actionBarAndStatusBarUtil=new ActionBarAndStatusBarUtil();
+    private ActionBarAndStatusBarUtil actionBarAndStatusBarUtil = new ActionBarAndStatusBarUtil();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,6 +155,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         etTel = findViewById(R.id.et_tel);
 
         btnRegister = findViewById(R.id.btn_register);
+
+        pbRegister = findViewById(R.id.pb_register);
     }
 
     @Override
@@ -246,6 +252,23 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         private User user = null;
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //进行注册前界面提示注册中
+            pbRegister.setVisibility(View.VISIBLE);
+            btnRegister.setText("注册中....");
+
+            //注册中禁止点击误操作
+            btnRegister.setEnabled(false);
+            ivProfile.setClickable(false);
+            etAccount.setFocusable(false);
+            etPassword.setFocusable(false);
+            etName.setFocusable(false);
+            spGender.setEnabled(false);
+            etTel.setFocusable(false);
+        }
+
+        @Override
         protected Integer doInBackground(User... users) {
             user = users[0];
             URL url = null;
@@ -278,6 +301,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         @Override
         protected void onPostExecute(Integer integer) {
             super.onPostExecute(integer);
+            //加载显示消失
+            pbRegister.setVisibility(View.GONE);
+            btnRegister.setText("注册");
             if (integer == 1) {
                 Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
@@ -287,6 +313,22 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 startActivity(intent);
             } else {
                 Toast.makeText(RegisterActivity.this, "注册失败请再尝试一次", Toast.LENGTH_LONG).show();
+                //注册失败则恢复操作
+                btnRegister.setEnabled(true);
+                ivProfile.setClickable(true);
+
+                etAccount.setFocusable(true);
+                etAccount.setFocusableInTouchMode(true);
+
+                etPassword.setFocusable(true);
+                etPassword.setFocusableInTouchMode(true);
+
+                etName.setFocusable(true);
+                etName.setFocusableInTouchMode(true);
+
+                spGender.setEnabled(true);
+                etTel.setFocusable(true);
+                etTel.setFocusableInTouchMode(true);
             }
         }
     }

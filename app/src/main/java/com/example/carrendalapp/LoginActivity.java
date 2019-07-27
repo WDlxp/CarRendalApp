@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +43,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button btnLogin;
     private CircleImageView civProfile;
     private EditText etAccount, etPassword;
+    private ProgressBar pbLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +124,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         etPassword = findViewById(R.id.et_password);
 
         tvForgetPassword = findViewById(R.id.tv_to_forget_password);
+        pbLogin = findViewById(R.id.pb_login);
     }
 
     @Override
@@ -167,6 +170,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private class CheckPasswordTask extends AsyncTask<String, Void, User> {
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //设置登陆中的提示界面
+            pbLogin.setVisibility(View.VISIBLE);
+            btnLogin.setText("登录中...");
+
+            //设置禁止点击防止误触
+            btnLogin.setClickable(false);
+            etAccount.setFocusable(false);
+            etPassword.setFocusable(false);
+        }
+
+        @Override
         protected User doInBackground(String... strings) {
             String account = strings[0];
             String password = strings[1];
@@ -208,6 +224,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         @Override
         protected void onPostExecute(User user) {
+            //完成登陆的提示界面
+            pbLogin.setVisibility(View.GONE);
+            btnLogin.setText("登录");
             if (user != null) {
                 Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -218,6 +237,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 finish();
             } else {
                 Toast.makeText(LoginActivity.this, "密码错误，请重新输入", Toast.LENGTH_SHORT).show();
+                //重启点击方便用户输入
+                btnLogin.setClickable(true);
+
+                etAccount.setFocusable(true);
+                etAccount.setFocusableInTouchMode(true);
+
+                etPassword.setFocusable(true);
+                etPassword.setFocusableInTouchMode(true);
                 etPassword.requestFocus();
             }
         }
