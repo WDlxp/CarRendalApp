@@ -79,6 +79,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private void goHome() {
         Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
         startActivity(intent);
+        //关闭当前页面
         finish();
     }
 
