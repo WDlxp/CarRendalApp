@@ -57,7 +57,7 @@ public class AccountActivity extends AppCompatActivity {
                 editor.apply();
                 //跳转回登录页
                 Intent intent = new Intent(AccountActivity.this, LoginActivity.class);
-                //清空任务栈
+                //设置清空任务栈，无法返回原来的页面
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
@@ -85,7 +85,9 @@ public class AccountActivity extends AppCompatActivity {
         etGender.setFocusable(false);
         etTel.setFocusable(false);
 
+        //获取SharedPreferences
         SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
+        //获取账号的数据
         User user = new User(
                 sp.getString("imageName", null),
                 sp.getString("account", null),
@@ -97,14 +99,16 @@ public class AccountActivity extends AppCompatActivity {
         );
 
 
-        //如果图片不为空的时候
-        if (!user.getImageName().equals("null") && user.getImageName() != null) {
+        //如果图片不为空的时候下载头像
+        if (!"null".equals(user.getImageName()) && user.getImageName() != null) {
             Toast.makeText(AccountActivity.this, "下载头像", Toast.LENGTH_SHORT).show();
             new DownloadImageTask(civProfile).execute(user.getImageName());
         }
+        //设置账号相关信息
         etName.setText(user.getName());
         etAccount.setText(user.getAccount());
         etPassword.setText(user.getPassword());
+        //根据性别编号设置相关性别
         if (user.getGender() == 0) {
             etGender.setText("男");
         } else if (user.getGender() == 1) {
@@ -116,6 +120,9 @@ public class AccountActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * 下载头像的Task
+     */
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         private CircleImageView civProfile;
 
@@ -135,6 +142,7 @@ public class AccountActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
+            //下载不为空则设置头像
             if (bitmap != null) {
                 civProfile.setImageBitmap(bitmap);
             } else {
