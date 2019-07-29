@@ -36,4 +36,12 @@ public class UrlAddress {
      * 首页查询可预约车辆的URL
      */
     public final static String HOME_QUERY_CAR_URL = "http://10.0.2.2:8080/CarRendalWeb_war_exploded/CarServlet?operation=homeQuery";
+    /**
+     * 插入订单的URL
+     */
+    public final static String INSERT_ORDER_URL = "http://10.0.2.2:8080/CarRendalWeb_war_exploded/OrderServlet";
+    /**
+     * 跟新空闲时间的URL
+     */
+    public final static String UPDATE_FREE_TIME_URL = "http://10.0.2.2:8080/CarRendalWeb_war_exploded/CarServlet";
 }

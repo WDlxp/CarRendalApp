@@ -37,13 +37,16 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author H
+ */
 public class AppointAdapter extends ArrayAdapter {
     public AppointAdapter(Context context, int resource, List objects) {
         super(context, resource, objects);
     }
 
 
-    public String ChangeFormat(int time) {
+    private String changeFormat(int time) {
         String result = time + "";
         if (time < 10) {
             result = "0" + time;
@@ -137,10 +140,10 @@ public class AppointAdapter extends ArrayAdapter {
                                 Log.d("fffff", "空闲时间为：" + free.get(a));
                             }
 
-                            final String startdate = dp_start.getYear() + "-" + ChangeFormat(dp_start.getMonth() + 1) + "-" + ChangeFormat(dp_start.getDayOfMonth());
-                            final String starttime = ChangeFormat(tp_start.getHour()) + ":" + ChangeFormat(tp_start.getMinute());
-                            final String finishdate = dp_finish.getYear() + "-" + ChangeFormat(dp_finish.getMonth() + 1) + "-" + ChangeFormat(dp_finish.getDayOfMonth());
-                            final String finishtime = ChangeFormat(tp_finish.getHour()) + ":" + ChangeFormat(tp_finish.getMinute());
+                            final String startdate = dp_start.getYear() + "-" + changeFormat(dp_start.getMonth() + 1) + "-" + changeFormat(dp_start.getDayOfMonth());
+                            final String starttime = changeFormat(tp_start.getHour()) + ":" + changeFormat(tp_start.getMinute());
+                            final String finishdate = dp_finish.getYear() + "-" + changeFormat(dp_finish.getMonth() + 1) + "-" + changeFormat(dp_finish.getDayOfMonth());
+                            final String finishtime = changeFormat(tp_finish.getHour()) + ":" + changeFormat(tp_finish.getMinute());
                             final String tel = edt_dtel.getText() + "";
 
 
