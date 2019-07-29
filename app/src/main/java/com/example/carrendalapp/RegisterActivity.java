@@ -94,8 +94,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         etAccount.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
+                //在失去焦点的时候检查账号是否存在
                 if (!b) {
+                    //获取账号
                     final String account = etAccount.getText().toString();
+                    //如果账号为空则不查询
                     if (!account.isEmpty()) {
                         new CheckAccountTask().execute(account);
                     }
@@ -161,6 +164,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     protected void onActivityResult(final int requestCode, int resultCode, @Nullable Intent data) {
+        //请求码
         if (requestCode == 1) {
             //获取图片路径
             if (resultCode == Activity.RESULT_OK && data != null) {
@@ -178,6 +182,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         cursor.close();
                     }
                 }
+                //当imagePath不为空则上传图片并获取图片唯一的标识名字
                 if (imagePath != null) {
                     new UploadImageTask().execute(imagePath);
                 }
