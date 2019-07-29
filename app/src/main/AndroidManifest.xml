@@ -47,9 +47,6 @@
             android:name=".ReleaseActivity"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".CheckActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity
             android:name=".UserCheckActivity"
             android:parentActivityName=".MainActivity" />
     </application>

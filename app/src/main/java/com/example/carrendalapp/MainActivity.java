@@ -96,13 +96,13 @@ public class MainActivity extends AppCompatActivity {
             //提交存储放回是否成功
             boolean flag = editor.commit();
             if (flag) {
-                Toast.makeText(MainActivity.this, "数据存储成功", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "数据存储成功", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(MainActivity.this, "数据存储失败", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "数据存储失败", Toast.LENGTH_SHORT).show();
             }
 //            Toast.makeText(MainActivity.this, user.getAccount() + user.getName(), Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(MainActivity.this, "是空的", Toast.LENGTH_LONG).show();
+//            Toast.makeText(MainActivity.this, "是空的", Toast.LENGTH_LONG).show();
         }
     }
 

@@ -1,5 +1,6 @@
 package com.example.carrendalapp;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,17 +22,27 @@ import java.util.List;
 public class UserCheckActivity extends AppCompatActivity {
 
     private ListView lv_checklist;
-    private List<CarOrder> carList = new ArrayList<>();//存储汽车类数组
+    //存储汽车类数组
+    private List<CarOrder> carList = new ArrayList<>();
 
-    private ActionBarAndStatusBarUtil actionBarAndStatusBarUtil=new ActionBarAndStatusBarUtil();
+    private ActionBarAndStatusBarUtil actionBarAndStatusBarUtil = new ActionBarAndStatusBarUtil();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //取出SharedPreferences
+        SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
+        int manager = sp.getInt("manager", 1);
         actionBarAndStatusBarUtil.initActionBarAndStatusBar(getWindow(), getSupportActionBar());
-        actionBarAndStatusBarUtil.setTitle("审核");
+        actionBarAndStatusBarUtil.setTitle("查看进度");
+        //如果是管理员切换标题
+        if (manager == 0) {
+            actionBarAndStatusBarUtil.setTitle("管理员审核");
+        }
         actionBarAndStatusBarUtil.showBackButton();
+
         setContentView(R.layout.activity_user_check);
-        lv_checklist = (ListView) findViewById(R.id.lv_checklist);
+        lv_checklist = findViewById(R.id.lv_checklist);
         showCarcheck();//相当于查询
     }
 
@@ -43,10 +54,13 @@ public class UserCheckActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int shuaxin = item.getItemId();
-        if (shuaxin == R.id.refresh) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.refresh) {
             showCarcheck();
             Toast.makeText(UserCheckActivity.this, "刷新成功！", Toast.LENGTH_SHORT).show();
+        } else if (itemId == android.R.id.home) {
+            //点击返回按钮时关闭当前页面
+            finish();
         }
         return true;
     }

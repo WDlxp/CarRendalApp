@@ -3,34 +3,23 @@ package com.example.carrendalapp.fragments;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
 
 import com.example.carrendalapp.AboutActivity;
 import com.example.carrendalapp.AccountActivity;
-import com.example.carrendalapp.MainActivity;
 import com.example.carrendalapp.MyAppointmentActivity;
 import com.example.carrendalapp.R;
 import com.example.carrendalapp.ReleaseActivity;
-import com.example.carrendalapp.CheckActivity;
-import com.example.carrendalapp.config.UrlAddress;
+import com.example.carrendalapp.UserCheckActivity;
 import com.example.carrendalapp.tasks.DownloadImageTask;
-import com.example.carrendalapp.utils.ImageUtil;
 import com.example.carrendalapp.views.CircleImageView;
-
-import java.io.File;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -103,7 +92,7 @@ public class MemberFragment extends Fragment implements View.OnClickListener {
                 intent = new Intent(getContext(), ReleaseActivity.class);
                 break;
             case R.id.rl_check:
-                intent = new Intent(getContext(), CheckActivity.class);
+                intent = new Intent(getContext(), UserCheckActivity.class);
                 break;
             default:
         }

@@ -1,11 +1,14 @@
 package com.example.carrendalapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.carrendalapp.adapters.MyViewPagerAdapter;
 import com.example.carrendalapp.fragments.AllFragment;
@@ -32,7 +35,7 @@ public class MyAppointmentActivity extends AppCompatActivity {
 
     private TabLayout tlTabs;
     private ArrayList<String> titles;
-    private ActionBarAndStatusBarUtil actionBarAndStatusBarUtil=new ActionBarAndStatusBarUtil();
+    private ActionBarAndStatusBarUtil actionBarAndStatusBarUtil = new ActionBarAndStatusBarUtil();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,18 @@ public class MyAppointmentActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.refresh, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.refresh) {
+            Toast.makeText(MyAppointmentActivity.this, "刷新中...", Toast.LENGTH_SHORT).show();
+        } else if (itemId == android.R.id.home) {
+            //点击返回按钮时关闭当前页面
+            finish();
+        }
         return true;
     }
 
