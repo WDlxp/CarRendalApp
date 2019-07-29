@@ -42,12 +42,14 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.Time;
+import java.util.Calendar;
 
 /**
  * @author WD
  */
 public class ReleaseActivity extends AppCompatActivity implements View.OnClickListener {
-
+    private Calendar nowDate;
     private EditText edtCarNumber, edtCarBand;
     private DatePicker dpStartDate, dpFinishDate;
     private TimePicker tpStartTime, tpFinishTime;
@@ -92,6 +94,10 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
 
         dpStartDate = findViewById(R.id.dp_start_date);
         dpFinishDate = findViewById(R.id.dp_finish_date);
+        nowDate = Calendar.getInstance();
+        //设置最小日期是当前日期
+        dpStartDate.setMinDate(nowDate.getTime().getTime());
+        dpFinishDate.setMinDate(nowDate.getTime().getTime());
 
         tpStartTime = findViewById(R.id.tp_start_time);
         tpFinishTime = findViewById(R.id.tp_finishtime);
@@ -113,13 +119,18 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
             //获取对应的信息
             String carNumber = edtCarNumber.getText().toString();
             String carBand = edtCarBand.getText().toString();
+            //判断车牌是否为空，是否合法
             if (carNumber.isEmpty() || carNumber.length() != 7) {
                 Toast.makeText(ReleaseActivity.this, "车牌不正确", Toast.LENGTH_SHORT).show();
                 edtCarNumber.requestFocus();
-            } else if (carBand.isEmpty()) {
+            }
+            //车型不能为空
+            else if (carBand.isEmpty()) {
                 Toast.makeText(ReleaseActivity.this, "车型不能为空", Toast.LENGTH_SHORT).show();
                 edtCarBand.requestFocus();
-            } else {
+            }
+            //如果信息完整则可以发布
+            else {
                 //取出SharedPreferences
                 SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
                 String account = sp.getString("account", null);
