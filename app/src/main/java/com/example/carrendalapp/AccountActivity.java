@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.carrendalapp.config.UrlAddress;
 import com.example.carrendalapp.entity.User;
+import com.example.carrendalapp.tasks.DownloadImageTask;
 import com.example.carrendalapp.utils.ActionBarAndStatusBarUtil;
 import com.example.carrendalapp.utils.ImageUtil;
 import com.example.carrendalapp.views.CircleImageView;
@@ -25,7 +26,6 @@ import com.example.carrendalapp.views.CircleImageView;
 public class AccountActivity extends AppCompatActivity {
 
     private CircleImageView civProfile;
-    private TextView tvToLogin;
     private EditText etAccount, etPassword, etName, etGender, etTel;
     private Button btnLoginOut;
     private ActionBarAndStatusBarUtil actionBarAndStatusBarUtil = new ActionBarAndStatusBarUtil();
@@ -118,36 +118,5 @@ public class AccountActivity extends AppCompatActivity {
         }
         etTel.setText(user.getTel());
 
-    }
-
-    /**
-     * 下载头像的Task
-     */
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        private CircleImageView civProfile;
-
-        public DownloadImageTask(CircleImageView civProfile) {
-            this.civProfile = civProfile;
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... strings) {
-            if (strings[0] != null) {
-                String imagePath = UrlAddress.BASE_URL + strings[0];
-                return ImageUtil.downloadImg(imagePath);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
-            //下载不为空则设置头像
-            if (bitmap != null) {
-                civProfile.setImageBitmap(bitmap);
-            } else {
-//                Toast.makeText(AccountActivity.this, "头像下载失败", Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 }

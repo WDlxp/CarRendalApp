@@ -43,8 +43,10 @@ public class ForgetPasswordActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forget_password);
+        //初始化标题栏和状态栏
         actionBarAndStatusBarUtil.initActionBarAndStatusBar(getWindow(), getSupportActionBar());
         actionBarAndStatusBarUtil.setTitle("找回密码");
+        //显示 返回上一页面的按钮
         actionBarAndStatusBarUtil.showBackButton();
 
         findViews();
@@ -121,10 +123,14 @@ public class ForgetPasswordActivity extends AppCompatActivity {
         account = intent.getStringExtra("account");
         tel = intent.getStringExtra("tel");
         //隐藏号码中间几位
+        assert tel != null;
         String hideTel = tel.substring(0, 3) + "*****" + tel.substring(8);
         tvTel.setText(hideTel);
     }
 
+    /**
+     * 更新修改密码的Task
+     */
     private class UpdatePasswordTask extends AsyncTask<String, Void, Integer> {
         @Override
         protected void onPreExecute() {
@@ -134,21 +140,24 @@ public class ForgetPasswordActivity extends AppCompatActivity {
             tvResetPassword.setVisibility(View.VISIBLE);
             //进行重置前禁止修改内容
             btnResetPassword.setClickable(false);
-
+            //禁止修改EditText的内容
             etPassword.setFocusable(false);
             etPasswordAgain.setFocusable(false);
         }
 
         @Override
         protected Integer doInBackground(String... strings) {
+            //后台获取传入的账号和新的密码
             String account = strings[0];
             String newPassword = strings[1];
 
             URL url = null;
             try {
+                //获取插入账号的URL
                 url = new URL(UrlAddress.FORGET_PASSWORD_URL + "?operation=update&account=" + account + "&newPassword=" + newPassword);
+                //获取连接
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-
+                //获取输入流
                 InputStream inputStream = urlConnection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
                 String line = bufferedReader.readLine();

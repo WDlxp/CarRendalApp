@@ -26,6 +26,7 @@ import com.example.carrendalapp.R;
 import com.example.carrendalapp.ReleaseActivity;
 import com.example.carrendalapp.CheckActivity;
 import com.example.carrendalapp.config.UrlAddress;
+import com.example.carrendalapp.tasks.DownloadImageTask;
 import com.example.carrendalapp.utils.ImageUtil;
 import com.example.carrendalapp.views.CircleImageView;
 
@@ -107,32 +108,5 @@ public class MemberFragment extends Fragment implements View.OnClickListener {
             default:
         }
         startActivity(intent);
-    }
-
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        private CircleImageView civProfile;
-
-        public DownloadImageTask(CircleImageView civProfile) {
-            this.civProfile = civProfile;
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... strings) {
-            if (strings[0] != null) {
-                String imagePath = UrlAddress.BASE_URL + strings[0];
-                return ImageUtil.downloadImg(imagePath);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
-            if (bitmap != null) {
-                civProfile.setImageBitmap(bitmap);
-            } else {
-                Toast.makeText(getContext(), "头像下载失败", Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 }
