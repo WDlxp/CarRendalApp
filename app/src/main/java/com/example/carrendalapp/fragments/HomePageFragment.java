@@ -1,21 +1,34 @@
 package com.example.carrendalapp.fragments;
 
 
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.carrendalapp.R;
-import com.example.carrendalapp.adapters.AppointAdapter;
-import com.example.carrendalapp.entity.CarOrder;
+import com.example.carrendalapp.adapters.HomeCarAdapter;
+import com.example.carrendalapp.config.UrlAddress;
+import com.example.carrendalapp.entity.Car;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +38,17 @@ import java.util.List;
  * @author WD
  */
 public class HomePageFragment extends Fragment {
-    ListView lv_first;
-    List<CarOrder> carList = new ArrayList<>();//存储汽车类数组
+    private ListView lvHomePage;
+    private SwipeRefreshLayout srlHomePage;
+    /**
+     * 存储汽车类数组
+     */
+    private List<Car> carList = new ArrayList<>();
+
+    /**
+     * 主页数据的适配器
+     */
+    private HomeCarAdapter homeCarAdapter;
 
 
     public HomePageFragment() {
@@ -39,89 +61,95 @@ public class HomePageFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home_page, container, false);
-        lv_first = view.findViewById(R.id.lv_first);
-        showFirstcar();
+        lvHomePage = view.findViewById(R.id.lv_first);
+        srlHomePage = view.findViewById(R.id.srl_home_page);
+
+        //设置刷新控件的外观
+        srlHomePage.setColorSchemeResources(android.R.color.holo_blue_bright);
+        //刷新监听
+        srlHomePage.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new HomeQueryCarDataTask().execute();
+            }
+        });
+
+        //添加布局
+        LinearLayout linearLayout = new LinearLayout(getContext());
+        //一个ImageView
+        ImageView imageView = new ImageView(getContext());
+        imageView.setImageResource(R.drawable.u76);
+        ViewGroup.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 700);
+        linearLayout.addView(imageView, layoutParams);
+        //给ListView添加HeaderView
+        lvHomePage.addHeaderView(linearLayout);
+        showFirstCar();
         return view;
     }
 
-    public void showFirstcar() {
-
-        String name = "11";
-        String carnumber = "1111111";
-        String carbrand = "ww12245";
-        String freetime = "2019-07-20-8:00 2019-07-30-9:00 2019-07-20-8:00 2019-07-30-9:00 2019-07-20-8:00 2019-07-30-9:00";
-        //String potel = object1.getString("tel");//获取车主电话号码
-
-
-        CarOrder car = new CarOrder(name, carnumber, carbrand, freetime, null, null, 0, 3);//将信息存进实体类
-        carList.add(car);//将实体类信息存进数组
-        AppointAdapter appointAdapter = new AppointAdapter(//适配器
+    private void showFirstCar() {
+        //适配器
+        homeCarAdapter = new HomeCarAdapter(
                 getContext(),
-                R.layout.layout_myappoint,
                 carList);
-        lv_first.setAdapter(appointAdapter);//将信息放入lv_list显示出来
-//        new Thread() {
-//            @Override
-//            public void run() {
-//                super.run();
-//                URL url = null;//填写接口ip地址
-//                try {
-//                    url = new URL("http://27.154.144.77:8080/0722Task/ShoeServlet");//后台搭建后修改
-//
-//                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-//                    InputStream inputStream = connection.getInputStream();
-//                    BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-//                    String line = br.readLine();
-//                    StringBuffer sb = new StringBuffer();
-//
-//                    while (line != null) {
-//                        JSONObject object = new JSONObject(line);
-//                        JSONArray array = object.getJSONArray("carlist");
-//
-//                        for (int i = 0; i < array.length(); i++) {
-//                            JSONObject object1 = array.getJSONObject(i);
-//                            String name = object1.getString("name");//获取车主姓名
-//                            String carnumber = object1.getString("carNumber");//获取车牌号
-//                            String carbrand = object1.getString("carBrand");//获取车辆型号
-//                            String freetime = object1.getString("freeTime");//获取车辆空闲时间
-//                            //String potel = object1.getString("tel");//获取车主电话号码
-//
-//
-//                            Car car = new Car(name, carnumber, carbrand, freetime, null, null, 0, 3);//将信息存进实体类
-//                            carList.add(car);//将实体类信息存进数组
-//                        }
-//
-//                        line = br.readLine();
-//
-//                    }
-//                    Message message = new Message();
-//                    message.what = 1;
-//                    message.obj = carList;
-//                    mhandler.sendMessage(message);
-//                } catch (MalformedURLException e) {
-//                    e.printStackTrace();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//                HttpURLConnection connection = null;
-//            }
-//        }.start();
+        //设置适配器
+        lvHomePage.setAdapter(homeCarAdapter);
+        //后台获取数据
+        new HomeQueryCarDataTask().execute();
     }
 
+    /**
+     * 首页数据查询任务
+     */
+    private class HomeQueryCarDataTask extends AsyncTask<Void, Void, List<Car>> {
 
-    Handler mhandler = new Handler() {
         @Override
-        public void handleMessage(@NonNull Message msg) {
-            super.handleMessage(msg);
-            if (msg.what == 1) {
-                AppointAdapter appointAdapter = new AppointAdapter(//适配器
-                        getContext(),
-                        R.layout.layout_myappoint,
-                        carList);
-                lv_first.setAdapter(appointAdapter);//将信息放入lv_list显示出来
+        protected List<Car> doInBackground(Void... voids) {
+            List<Car> list = null;
+            try {
+                URL url = new URL(UrlAddress.HOME_QUERY_CAR_URL);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
+                //获取输入流结合缓冲区
+                InputStream inputStream = urlConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String line = bufferedReader.readLine();
+                if (line != null) {
+                    list = new ArrayList<>();
+                    JSONObject jsonObject = new JSONObject(line);
+                    JSONArray data = jsonObject.getJSONArray("data");
+                    for (int i = 0; i < data.length(); i++) {
+                        JSONObject carObject = data.getJSONObject(i);
+                        list.add(new Car(
+                                carObject.getString("account"),
+                                carObject.getString("name"),
+                                carObject.getString("carNumber"),
+                                carObject.getString("carBand"),
+                                carObject.getString("image"),
+                                carObject.getString("freeTime"),
+                                0,
+                                0
+                        ));
+                    }
+                }
+                bufferedReader.close();
+                inputStream.close();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+            return list;
         }
-    };
+
+        @Override
+        protected void onPostExecute(List<Car> cars) {
+            super.onPostExecute(cars);
+            homeCarAdapter.updateListData(cars);
+            //取消刷新
+            srlHomePage.setRefreshing(false);
+        }
+    }
 }

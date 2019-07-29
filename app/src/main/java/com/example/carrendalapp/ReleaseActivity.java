@@ -138,7 +138,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 StringBuilder timeStringBuilder = new StringBuilder();
                 timeStringBuilder.append(dpStartDate.getYear()).append("-").append(zeroPadding(dpStartDate.getMonth())).append("-").append(zeroPadding(dpStartDate.getDayOfMonth())).append("-").append(zeroPadding(tpStartTime.getHour()) + ":" + zeroPadding(tpStartTime.getMinute())).append(" ").append(dpFinishDate.getYear() + "-" + zeroPadding(dpStartDate.getMonth()) + "-" + zeroPadding(dpStartDate.getDayOfMonth()) + "-").append(zeroPadding(tpFinishTime.getHour()) + ":" + zeroPadding(tpStartTime.getMinute()));
                 Log.d("InsertTime", timeStringBuilder.toString());
-                Car car = new Car(account, carNumber, carBand, imageName, timeStringBuilder.toString(), 0, 1);
+                Car car = new Car(account,null, carNumber, carBand, imageName, timeStringBuilder.toString(), 0, 1);
                 //启动发布
                 new ReleaseCarInfoTask().execute(car);
             }

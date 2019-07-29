@@ -8,6 +8,7 @@ package com.example.carrendalapp.entity;
  */
 public class Car {
     private String account;
+    private String name;
     private String carNumber;
     private String carBand;
     private String image;
@@ -15,8 +16,9 @@ public class Car {
     private int state;
     private int check;
 
-    public Car(String account, String carNumber, String carBand, String image, String freeTime, int state, int check) {
+    public Car(String account, String name,String carNumber, String carBand, String image, String freeTime, int state, int check) {
         this.account = account;
+        this.name=name;
         this.carNumber = carNumber;
         this.carBand = carBand;
         this.image = image;
@@ -27,6 +29,10 @@ public class Car {
 
     public String getAccount() {
         return account;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getCarNumber() {

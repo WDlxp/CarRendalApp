@@ -24,6 +24,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <DatePicker
@@ -37,7 +38,7 @@
 
         <TimePicker
             android:id="@+id/tp_start"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:timePickerMode="spinner">
 
@@ -53,6 +54,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <DatePicker
@@ -67,10 +69,10 @@
         <TimePicker
             android:id="@+id/tp_finish"
             style="@android:style/Animation"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
 
-            android:timePickerMode="spinner"></TimePicker>
+            android:timePickerMode="spinner" />
 
     </LinearLayout>
 

@@ -25,8 +25,15 @@ public class UrlAddress {
      */
     public final static String CHECK_PASSWORD_URL = "http://10.0.2.2:8080/CarRendalWeb_war_exploded/LoginServlet";
     /**
-     *
+     * 忘记密码使用的URL
      */
     public final static String FORGET_PASSWORD_URL = "http://10.0.2.2:8080/CarRendalWeb_war_exploded/ForgetPasswordServlet";
+    /**
+     * 发布车辆的URL
+     */
     public final static String INSERT_CAR_URL = "http://10.0.2.2:8080/CarRendalWeb_war_exploded/CarServlet";
+    /**
+     * 首页查询可预约车辆的URL
+     */
+    public final static String HOME_QUERY_CAR_URL = "http://10.0.2.2:8080/CarRendalWeb_war_exploded/CarServlet?operation=homeQuery";
 }

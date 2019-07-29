@@ -58,14 +58,14 @@ public class AppointAdapter extends ArrayAdapter {
 
         final CarOrder carappoint = (CarOrder) getItem(position);
         convertView = LayoutInflater.from(getContext()).inflate(R.layout.layout_myappoint, null);
-        ImageView img = convertView.findViewById(R.id.img_portrait);
+        ImageView img = convertView.findViewById(R.id.iv_car);
         TextView tv_name = convertView.findViewById(R.id.tv_name);
-        TextView tv_carnumber = convertView.findViewById(R.id.tv_carnumber);
-        TextView tv_carbrand = convertView.findViewById(R.id.tv_carbrand);
-        TextView tv_freetime = convertView.findViewById(R.id.tv_freetime);
+        TextView tv_carnumber = convertView.findViewById(R.id.tv_car_number);
+        TextView tv_carbrand = convertView.findViewById(R.id.tv_car_brand);
+        TextView tv_freetime = convertView.findViewById(R.id.tv_free_time);
         TextView tv_potime = convertView.findViewById(R.id.tv_potime);
         TextView tv_potel = convertView.findViewById(R.id.tv_potel);
-        Button btn_status = convertView.findViewById(R.id.btn_status);
+        Button btn_status = convertView.findViewById(R.id.btn_appoint);
 
         carappoint.setStatus(3);//测试
 
