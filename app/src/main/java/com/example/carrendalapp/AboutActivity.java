@@ -25,17 +25,19 @@ public class AboutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-
+        //初始化标题栏和状态栏
         actionBarAndStatusBarUtil.initActionBarAndStatusBar(getWindow(), getSupportActionBar());
         actionBarAndStatusBarUtil.setTitle("关于我们");
         actionBarAndStatusBarUtil.showBackButton();
 
         tvTel = findViewById(R.id.tv_tel);
-
+        //设置点击事件
         tvTel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //配置Intent
                 Uri telUri = Uri.parse("tel:18959223364");
+                //隐式Intent去拨打客服电话
                 Intent intent = new Intent(Intent.ACTION_DIAL, telUri);
                 startActivity(intent);
             }
