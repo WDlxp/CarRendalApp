@@ -133,7 +133,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 String account = sp.getString("account", null);
                 //获取空闲时间段
                 StringBuilder timeStringBuilder = new StringBuilder();
-                timeStringBuilder.append(dpStartDate.getYear()).append("-").append(zeroPadding(dpStartDate.getMonth())).append("-").append(zeroPadding(dpStartDate.getDayOfMonth())).append("-").append(zeroPadding(tpStartTime.getHour()) + ":" + zeroPadding(tpStartTime.getMinute())).append(" ").append(dpFinishDate.getYear() + "-" + zeroPadding(dpStartDate.getMonth()) + "-" + zeroPadding(dpStartDate.getDayOfMonth()) + "-").append(zeroPadding(tpFinishTime.getHour()) + ":" + zeroPadding(tpStartTime.getMinute()));
+                timeStringBuilder.append(dpStartDate.getYear()).append("-").append(zeroPadding(dpStartDate.getMonth()+1)).append("-").append(zeroPadding(dpStartDate.getDayOfMonth())).append("-").append(zeroPadding(tpStartTime.getHour()) + ":" + zeroPadding(tpStartTime.getMinute())).append(" ").append(dpFinishDate.getYear() + "-" + zeroPadding(dpFinishDate.getMonth()+1) + "-" + zeroPadding(dpFinishDate.getDayOfMonth()) + "-").append(zeroPadding(tpFinishTime.getHour()) + ":" + zeroPadding(tpFinishTime.getMinute()));
                 Log.d("InsertTime", timeStringBuilder.toString());
                 Car car = new Car(account,null, carNumber, carBand, imageName, timeStringBuilder.toString(), 0, 1);
                 //启动发布
