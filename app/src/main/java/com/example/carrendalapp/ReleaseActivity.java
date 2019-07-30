@@ -1,6 +1,5 @@
 package com.example.carrendalapp;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,7 +17,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -42,7 +40,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.Time;
 import java.util.Calendar;
 
 /**
@@ -100,7 +97,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         dpFinishDate.setMinDate(nowDate.getTime().getTime());
 
         tpStartTime = findViewById(R.id.tp_start_time);
-        tpFinishTime = findViewById(R.id.tp_finishtime);
+        tpFinishTime = findViewById(R.id.tp_finish_time);
 
         ivCar = findViewById(R.id.iv_car);
         btnSubmit = findViewById(R.id.btn_submit);
