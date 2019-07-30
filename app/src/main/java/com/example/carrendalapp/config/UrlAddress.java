@@ -52,4 +52,12 @@ public class UrlAddress {
      * 跟新空闲时间的URL
      */
     public final static String UPDATE_FREE_TIME_URL = "http://10.0.2.2:8080/CarRendalWeb_war_exploded/CarServlet";
+    /**
+     * 查询车辆审核情况
+     */
+    public final static String QUERY_CARCHECK_URL="http://10.0.2.2:8080/CarRendalWeb_war_exploded/CarServlet";
+    /**
+     * 更新车辆审核
+     */
+    public final static String Update_CHECK_URL="http://10.0.2.2:8080/CarRendalWeb_war_exploded/CarServlet";
 }

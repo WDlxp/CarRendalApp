@@ -1,9 +1,11 @@
 package com.example.carrendalapp;
 
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -13,9 +15,24 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.carrendalapp.adapters.CheckAdapter;
+import com.example.carrendalapp.config.UrlAddress;
+import com.example.carrendalapp.entity.Car;
 import com.example.carrendalapp.entity.CarOrder;
+import com.example.carrendalapp.entity.User;
+import com.example.carrendalapp.fragments.MemberFragment;
 import com.example.carrendalapp.utils.ActionBarAndStatusBarUtil;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,126 +41,233 @@ public class UserCheckActivity extends AppCompatActivity {
     private ListView lv_checklist;
     //存储汽车类数组
     private List<CarOrder> carList = new ArrayList<>();
-
     private ActionBarAndStatusBarUtil actionBarAndStatusBarUtil = new ActionBarAndStatusBarUtil();
+    //适配器
+    private CheckAdapter checkAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        actionBarAndStatusBarUtil.initActionBarAndStatusBar(getWindow(), getSupportActionBar());
+
         //取出SharedPreferences
         SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
         int manager = sp.getInt("manager", 1);
         actionBarAndStatusBarUtil.initActionBarAndStatusBar(getWindow(), getSupportActionBar());
         actionBarAndStatusBarUtil.setTitle("查看进度");
+        setContentView(R.layout.activity_user_check);
+        lv_checklist = findViewById(R.id.lv_checklist);
+
+
         //如果是管理员切换标题
         if (manager == 0) {
             actionBarAndStatusBarUtil.setTitle("管理员审核");
         }
         actionBarAndStatusBarUtil.showBackButton();
 
-        setContentView(R.layout.activity_user_check);
-        lv_checklist = findViewById(R.id.lv_checklist);
-        showCarcheck();//相当于查询
+
+        //管理员查询所有未审核车辆信息
+        if (manager == 0) {
+            //适配器
+            checkAdapter = new CheckAdapter(
+                    UserCheckActivity.this,
+                    R.layout.layout_usercheck,
+                    carList
+            );
+            //设置适配器
+            lv_checklist.setAdapter(checkAdapter);
+            //后台获取数据
+            new QueryAllCar().execute();
+        }
+
+        //用户查询该账户用户发布的车辆信息
+        else if (manager == 1) {
+            //适配器
+            checkAdapter = new CheckAdapter(
+                    UserCheckActivity.this,
+                    R.layout.layout_usercheck,
+                    carList
+            );
+            //设置适配器
+           lv_checklist.setAdapter(checkAdapter);
+            //后台获取数据
+            new QueryAccountCar().execute();
+        }
     }
 
+    //设置刷新菜单
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.refresh, menu);
         return true;
     }
 
+    //刷新
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
+        SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
+        int manager = sp.getInt("manager", 1);
         if (itemId == R.id.refresh) {
-            showCarcheck();
-            Toast.makeText(UserCheckActivity.this, "刷新成功！", Toast.LENGTH_SHORT).show();
-        } else if (itemId == android.R.id.home) {
-            //点击返回按钮时关闭当前页面
+            //管理员刷新
+            if (manager == 0) {
+                checkAdapter = new CheckAdapter(
+                        UserCheckActivity.this,
+                        R.layout.layout_usercheck,
+                        carList
+                );
+                //设置适配器
+                lv_checklist.setAdapter(checkAdapter);
+                new QueryAllCar().execute();
+                Toast.makeText(UserCheckActivity.this, "用户数据刷新成功！", Toast.LENGTH_SHORT).show();
+            }
+
+            //用户刷新
+            else {
+                checkAdapter = new CheckAdapter(
+                        UserCheckActivity.this,
+                        R.layout.layout_usercheck,
+                        carList
+                );
+                //设置适配器
+                lv_checklist.setAdapter(checkAdapter);
+                new QueryAccountCar().execute();
+                Toast.makeText(UserCheckActivity.this, "审核数据刷新成功！", Toast.LENGTH_SHORT).show();
+            }
+
+        }else if (itemId==android.R.id.home){
             finish();
         }
         return true;
     }
 
 
-    public void showCarcheck() {//将后台数据库表中的相关信息反馈到前端展示
-        String name = "11";
-        String carnumber = "1111111";
-        String carbrand = "ww12245";
-        String freetime = "2019-07-20-8:00 2019-07-30-9:00 2019-07-20-8:00 2019-07-30-9:00 2019-07-20-8:00 2019-07-30-9:00";
-        String potel = "11111111111";
-        int check = 1;
-        CarOrder car = new CarOrder(name, carnumber, carbrand, freetime, null, potel, check, 4);//将信息存进实体类
-        carList.add(car);//将实体类信息存进数组
-        CheckAdapter checkAdapter = new CheckAdapter(//适配器
-                UserCheckActivity.this,
-                R.layout.layout_usercheck,
-                carList);
-        lv_checklist.setAdapter(checkAdapter);//将信息放入lv_list显示出来
-//        new Thread() {
-//            @Override
-//            public void run() {
-//                super.run();
-//                URL url = null;//填写接口ip地址
-//                try {
-//                    url = new URL("http://27.154.144.77:8080/0722Task/ShoeServlet");//后台搭建后修改
-//
-//                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-//                    InputStream inputStream = connection.getInputStream();
-//                    BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-//                    String line = br.readLine();
-//                    StringBuffer sb = new StringBuffer();
-//
-//                    while (line != null) {
-//                        JSONObject object = new JSONObject(line);
-//                        JSONArray array = object.getJSONArray("carlist");
-//
-//                        for (int i = 0; i < array.length(); i++) {
-//                            JSONObject object1 = array.getJSONObject(i);
-//                            String name = object1.getString("name");//获取车主姓名
-//                            String carnumber = object1.getString("carNumber");//获取车牌号
-//                            String carbrand = object1.getString("carBrand");//获取车辆型号
-//                            String freetime = object1.getString("freeTime");//获取车辆空闲时间
-//                            String potel = object1.getString("tel");//获取车主电话号码
-//                            int check = object1.getInt("check");//获取车辆审核情况
-//
-//                            Car car = new Car(name, carnumber, carbrand, freetime, null, potel, check, 4);//将信息存进实体类
-//                            carList.add(car);//将实体类信息存进数组
-//                        }
-//
-//                        line = br.readLine();
-//
-//                    }
-//                    Message message = new Message();
-//                    message.what = 1;
-//                    message.obj = carList;
-//                    mhandler.sendMessage(message);
-//                } catch (MalformedURLException e) {
-//                    e.printStackTrace();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//                HttpURLConnection connection = null;
-//            }
-//        }.start();
+    /**
+     * 查询所有未审核的车辆信息
+     */
+    private class QueryAllCar extends AsyncTask<Void, Void, List<Car>> {
+
+        @Override
+        protected List<Car> doInBackground(Void... voids) {
+            List<Car> list = null;
+            try {
+                URL url = new URL(UrlAddress.QUERY_CARCHECK_URL + "?operation=checkquery&checkState=" + 1);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
+                //获取输入流结合缓冲区
+                InputStream inputStream = urlConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String line = bufferedReader.readLine();
+                if (line != null) {
+                    list = new ArrayList<>();
+                    JSONObject jsonObject = new JSONObject(line);
+                    JSONArray data = jsonObject.getJSONArray("managercheck");
+
+                    for (int i = 0; i < data.length(); i++) {
+                        JSONObject carObject = data.getJSONObject(i);
+                        list.add(new Car(
+                                carObject.getString("name"),
+                                carObject.getString("account"),
+                                carObject.getString("carNumber"),
+                                carObject.getString("carBand"),
+                                carObject.getString("image"),
+                                carObject.getString("freeTime"),
+                                carObject.getInt("state"),
+                                1
+                        ));
+                    }
+                }
+                bufferedReader.close();
+                inputStream.close();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return list;
+        }
+
+        @Override
+        protected void onPostExecute(List<Car> cars) {
+            checkAdapter = new CheckAdapter(
+                    UserCheckActivity.this,
+                    R.layout.layout_usercheck,
+                    cars
+            );
+            super.onPostExecute(cars);
+            //将信息放入list显示出来
+            lv_checklist.setAdapter(checkAdapter);
+        }
     }
 
 
-    Handler mhandler = new Handler() {
+    /**
+     * 用户个人数据查询任务
+     */
+
+    private class QueryAccountCar extends AsyncTask<Void, Void, List<Car>> {
+        SharedPreferences sp = getSharedPreferences("data", MODE_PRIVATE);
+        String account = sp.getString("account", null);
+
         @Override
-        public void handleMessage(@NonNull Message msg) {
-            super.handleMessage(msg);
-            if (msg.what == 1) {
-                CheckAdapter checkAdapter = new CheckAdapter(//适配器
-                        UserCheckActivity.this,
-                        R.layout.layout_usercheck,
-                        carList);
-                lv_checklist.setAdapter(checkAdapter);//将信息放入lv_list显示出来
+        protected List<Car> doInBackground(Void... voids) {
+            List<Car> list = null;
+
+            try {
+                URL url = new URL(UrlAddress.QUERY_CARCHECK_URL + "?operation=usercheckquery&account=" + account);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
+                //获取输入流结合缓冲区
+                InputStream inputStream = urlConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String line = bufferedReader.readLine();
+
+                if (line != null) {
+                    list = new ArrayList<>();
+                    JSONObject jsonObject = new JSONObject(line);
+
+                    JSONArray data = jsonObject.getJSONArray("usercheck");
+
+                    for (int i = 0; i < data.length(); i++) {
+                        JSONObject carObject = data.getJSONObject(i);
+                        list.add(new Car(
+                                carObject.getString("name"),
+                                account,
+                                carObject.getString("carNumber"),
+                                carObject.getString("carBand"),
+                                carObject.getString("image"),
+                                carObject.getString("freeTime"),
+                                carObject.getInt("state"),
+                                carObject.getInt("checkState")
+                        ));
+                    }
+                }
+                bufferedReader.close();
+                inputStream.close();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+            return list;
         }
-    };
 
+        @Override
+        protected void onPostExecute(List<Car> cars) {
+            super.onPostExecute(cars);
+            checkAdapter = new CheckAdapter(
+                    UserCheckActivity.this,
+                    R.layout.layout_usercheck,
+                    cars
+            );
 
+            //将信息放入list显示出来
+            lv_checklist.setAdapter(checkAdapter);
+
+        }
+    }
 }
