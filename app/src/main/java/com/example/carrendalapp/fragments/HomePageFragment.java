@@ -75,15 +75,10 @@ public class HomePageFragment extends Fragment {
             }
         });
 
-        //添加布局
-        LinearLayout linearLayout = new LinearLayout(getContext());
-        //一个ImageView
-        ImageView imageView = new ImageView(getContext());
-        imageView.setImageResource(R.drawable.u76);
-        ViewGroup.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 700);
-        linearLayout.addView(imageView, layoutParams);
+        //添加头部的图片布局
+        View imageHead=LayoutInflater.from(getContext()).inflate(R.layout.head_car_layout,null);
         //给ListView添加HeaderView
-        lvHomePage.addHeaderView(linearLayout);
+        lvHomePage.addHeaderView(imageHead);
         showFirstCar();
         return view;
     }
