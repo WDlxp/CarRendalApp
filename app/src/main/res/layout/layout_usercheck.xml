@@ -13,6 +13,7 @@
         <com.example.carrendalapp.views.CircleImageView
             android:layout_marginLeft="5dp"
             android:id="@+id/img_cportrait"
+            android:layout_gravity="center"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/add_picture" />
@@ -58,7 +59,6 @@
                 android:textSize="15sp"/>
 
         </LinearLayout>
-
 
         <TextView
             android:id="@+id/tv_usercheck"

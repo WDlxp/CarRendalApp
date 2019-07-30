@@ -314,7 +314,7 @@ public class HomeCarAdapter extends BaseAdapter {
         tvName.setText(car.getName());
         tvCarNumber.setText("车牌：" + car.getCarNumber());
         tvCarBrand.setText("车型：" + car.getCarBand());
-        tvFreeTime.setText("空闲时间：" + car.getFreeTime());
+        tvFreeTime.setText("空闲时间：\n" + car.getFreeTime());
     }
 
     private void findViews(View view) {

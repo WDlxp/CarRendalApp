@@ -70,7 +70,7 @@ public class AppointOrderAdapter extends BaseAdapter {
         tvName.setText(appointOrder.getName());
         tvCarNumber.setText("车牌" + order.getCarNumber());
         tvCarBrand.setText("车型：" + appointOrder.getCarBrand());
-        tvFreeTime.setText("空闲时间：" + appointOrder.getFreeTime());
+        tvFreeTime.setText("空闲时间：\n" + appointOrder.getFreeTime());
         tvAppointTime.setText("预约时间：" + order.getStartDate() + " " + order.getStartTime() + "~" + order.getFinishDate() + " " + order.getFinishTime());
         tvAppointTel.setText("Tel:" + appointOrder.getTel());
         //根据状态设计不同的显示
