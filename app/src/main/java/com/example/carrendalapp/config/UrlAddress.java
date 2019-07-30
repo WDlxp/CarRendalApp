@@ -41,6 +41,14 @@ public class UrlAddress {
      */
     public final static String INSERT_ORDER_URL = "http://10.0.2.2:8080/CarRendalWeb_war_exploded/OrderServlet";
     /**
+     * 查询订单的URL
+     */
+    public final static String QUERY_ORDER_URL = "http://10.0.2.2:8080/CarRendalWeb_war_exploded/OrderServlet";
+    /**
+     * 取消订单的URL
+     */
+    public final static String CANCEL_ORDER_URL = "http://10.0.2.2:8080/CarRendalWeb_war_exploded/OrderServlet";
+    /**
      * 跟新空闲时间的URL
      */
     public final static String UPDATE_FREE_TIME_URL = "http://10.0.2.2:8080/CarRendalWeb_war_exploded/CarServlet";

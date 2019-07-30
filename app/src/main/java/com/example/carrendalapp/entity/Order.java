@@ -1,5 +1,8 @@
 package com.example.carrendalapp.entity;
 
+/**
+ * @author WD
+ */
 public class Order {
     private String account;
     private String carNumber;
@@ -9,14 +12,14 @@ public class Order {
     private String finishTime;
     private int state;
 
-    public Order(String account, String carNumber, String startDate, String startTime, String finishDate, String finishTime,int state) {
+    public Order(String account, String carNumber, String startDate, String startTime, String finishDate, String finishTime, int state) {
         this.account = account;
         this.carNumber = carNumber;
         this.startDate = startDate;
         this.startTime = startTime;
         this.finishDate = finishDate;
         this.finishTime = finishTime;
-        this.state=state;
+        this.state = state;
     }
 
     public String getAccount() {
@@ -45,5 +48,9 @@ public class Order {
 
     public int getState() {
         return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
     }
 }

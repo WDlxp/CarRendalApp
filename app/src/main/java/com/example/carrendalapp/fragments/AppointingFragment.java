@@ -1,143 +1,142 @@
 package com.example.carrendalapp.fragments;
 
 
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.carrendalapp.BaseLazyLoadFragment;
 import com.example.carrendalapp.R;
-import com.example.carrendalapp.adapters.AppointAdapter;
-import com.example.carrendalapp.entity.CarOrder;
+import com.example.carrendalapp.adapters.AppointOrderAdapter;
+import com.example.carrendalapp.config.UrlAddress;
+import com.example.carrendalapp.entity.AppointOrder;
+import com.example.carrendalapp.entity.Order;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * A simple {@link Fragment} subclass.
  *
  * @author WD
  */
-public class AppointingFragment extends Fragment {
+public class AppointingFragment extends BaseLazyLoadFragment {
 
-    private ListView lv_listing;
-    private List<CarOrder> carList = new ArrayList<>();//存储汽车类数组
+    private ListView lvAllList;
+    //存储汽车类数组
+    private List<AppointOrder> carList = new ArrayList<>();
 
+    private AppointOrderAdapter appointOrderAdapter;
 
     public AppointingFragment() {
-        // Required empty public constructor
     }
-
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_appointing, container, false);
-        lv_listing = view.findViewById(R.id.lv_listing);
-        showCar();//相当于查询
-        // Inflate the layout for this fragment
-
-
-        return view;
+    protected int setContentView() {
+        return R.layout.fragment_all;
     }
 
-
+    @Override
+    protected void lazyLoad() {
+        lvAllList = getView().findViewById(R.id.lv_all_list);
+        showCar();//相当于查询
+    }
 
     public void showCar() {//将后台数据库表中的相关信息反馈到前端展示
-        String name = "name";//获取车主姓名
-        String carnumber="carNumber";//获取车牌号
-        String carbrand="carBrand";//获取车辆型号
-        String freetime = "freeTime";//获取车辆空闲时间
+        //适配器
+        appointOrderAdapter = new AppointOrderAdapter(getContext(), carList,1);
+        //将信息放入lv_list显示出来
+        lvAllList.setAdapter(appointOrderAdapter);
 
-        String startdate = "startDate";//获取预约开始日期
-        String starttime = "startTime";//获取预约开始时间点
-        String finishdate ="finishDate";//获取预约结束日期
-        String finishtime ="finishTime";//获取预约结束时间点
-        String potel ="tel";//获取电话号码
-
-        String potime = startdate + "-" + starttime + " " + finishdate + "-" + finishtime;//根据预约时间信息得到预约时间段
-        CarOrder car = new CarOrder(name, carnumber, carbrand, freetime, potime, potel, 0, 2);//将信息存进实体类
-        carList.add(car);//将实体类信息存进数组
-        AppointAdapter appointAdapter = new AppointAdapter(//适配器
-                getContext(),
-                R.layout.layout_myappoint,
-                carList);
-        lv_listing.setAdapter(appointAdapter);//将信息放入lv_list显示出来
-
-//        new Thread() {
-//            @Override
-//            public void run() {
-//                super.run();
-//                URL url = null;//填写接口ip地址
-//                try {
-//                    url = new URL("http://27.154.144.77:8080/0722Task/ShoeServlet");//后台搭建后修改
-//
-//                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-//                    InputStream inputStream = connection.getInputStream();
-//                    BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-//                    String line = br.readLine();
-//                    StringBuffer sb = new StringBuffer();
-//
-//                    while (line != null) {
-//                        JSONObject object = new JSONObject(line);
-//                        JSONArray array = object.getJSONArray("orderlist");
-//
-//                        for (int i = 0; i < array.length(); i++) {
-//                            JSONObject object1 = array.getJSONObject(i);
-//                            String name = object1.getString("name");//获取车主姓名
-//                            String carnumber = object1.getString("carNumber");//获取车牌号
-//                            String carbrand = object1.getString("carBrand");//获取车辆型号
-//                            String freetime = object1.getString("freeTime");//获取车辆空闲时间
-//
-//                            String startdate = object1.getString("startDate");//获取预约开始日期
-//                            String starttime = object1.getString("startTime");//获取预约开始时间点
-//                            String finishdate = object1.getString("finishDate");//获取预约结束日期
-//                            String finishtime = object1.getString("finishTime");//获取预约结束时间点
-//                            String potel = object1.getString("tel");//获取电话号码
-//
-//                            String potime = startdate + "-" + starttime + " " + finishdate + "-" + finishtime;//根据预约时间信息得到预约时间段
-//                            Car car = new Car(name, carnumber, carbrand, freetime, potime, potel, 3, 2);//将信息存进实体类
-//                            carList.add(car);//将实体类信息存进数组
-//                        }
-//
-//                        line = br.readLine();
-//
-//                    }
-//                    Message message = new Message();
-//                    message.what = 1;
-//                    message.obj = carList;
-//                    mhandler.sendMessage(message);
-//                } catch (MalformedURLException e) {
-//                    e.printStackTrace();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//                HttpURLConnection connection = null;
-//            }
-//        }.start();
+        //取出SharedPreferences
+        SharedPreferences sp = getContext().getSharedPreferences("data", MODE_PRIVATE);
+        String account = sp.getString("account", null);
+        new QueryOrderByStateTask().execute(account);
     }
 
 
-    Handler mhandler = new Handler() {
+    /**
+     * 查询预约中的订单信息
+     */
+    private class QueryOrderByStateTask extends AsyncTask<String, Void, List<AppointOrder>> {
+
         @Override
-        public void handleMessage(@NonNull Message msg) {
-            super.handleMessage(msg);
-            if (msg.what == 1) {
-                AppointAdapter appointAdapter = new AppointAdapter(//适配器
-                        getContext(),
-                        R.layout.layout_myappoint,
-                        carList);
-                lv_listing.setAdapter(appointAdapter);//将信息放入lv_list显示出来
+        protected List<AppointOrder> doInBackground(String... strings) {
+            String account = strings[0];
+            List<AppointOrder> list = null;
+            try {
+                URL url = new URL(UrlAddress.QUERY_ORDER_URL + "?operation=queryByState&account=" + account + "&state=1");
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                //获取输入流结合缓冲区
+                InputStream inputStream = urlConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String line = bufferedReader.readLine();
+                if (line != null) {
+                    list = new ArrayList<>();
+                    JSONObject jsonObject = new JSONObject(line);
+                    Log.d("TAG1", line);
+                    JSONArray data = jsonObject.getJSONArray("data");
+                    for (int i = 0; i < data.length(); i++) {
+                        JSONObject appointOrderObject = data.getJSONObject(i);
+                        Order order = new Order(
+                                appointOrderObject.getString("account"),
+                                appointOrderObject.getString("carNumber"),
+                                appointOrderObject.getString("startDate"),
+                                appointOrderObject.getString("startTime"),
+                                appointOrderObject.getString("finishDate"),
+                                appointOrderObject.getString("finishTime"),
+                                appointOrderObject.getInt("state")
+                        );
+                        AppointOrder appointOrder = new AppointOrder(
+                                appointOrderObject.getString("name"),
+                                appointOrderObject.getString("tel"),
+                                appointOrderObject.getString("carBrand"),
+                                appointOrderObject.getString("image"),
+                                appointOrderObject.getString("freeTime"),
+                                order
+                        );
+                        list.add(appointOrder);
+                    }
+                }
+                bufferedReader.close();
+                inputStream.close();
+                return list;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return list;
+        }
+        @Override
+        protected void onPostExecute(List<AppointOrder> appointOrders) {
+            super.onPostExecute(appointOrders);
+            if (appointOrders != null) {
+                carList = appointOrders;
+                appointOrderAdapter.updateAppointOrderData(carList);
             }
         }
-    };
-
+    }
 }

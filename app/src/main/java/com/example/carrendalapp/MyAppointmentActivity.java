@@ -62,26 +62,10 @@ public class MyAppointmentActivity extends AppCompatActivity {
         //获取ViewPager的适配器
         MyViewPagerAdapter myViewPagerAdapter = new MyViewPagerAdapter(getSupportFragmentManager(), fragmentList, titles);
         vpContainer.setAdapter(myViewPagerAdapter);
+        //设置缓存页面为0，每个页面都能及时刷新
+        vpContainer.setOffscreenPageLimit(0);
         //TabLayout绑定ViewPager
         tlTabs.setupWithViewPager(vpContainer);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.refresh, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.refresh) {
-            Toast.makeText(MyAppointmentActivity.this, "刷新中...", Toast.LENGTH_SHORT).show();
-        } else if (itemId == android.R.id.home) {
-            //点击返回按钮时关闭当前页面
-            finish();
-        }
-        return true;
     }
 
     private void findViews() {

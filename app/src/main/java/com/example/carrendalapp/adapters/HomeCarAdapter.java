@@ -310,9 +310,9 @@ public class HomeCarAdapter extends BaseAdapter {
             new DownloadImageTask(circleImageView).execute(car.getImage());
         }
         tvName.setText(car.getName());
-        tvCarNumber.setText(car.getCarNumber());
-        tvCarBrand.setText(car.getCarBand());
-        tvFreeTime.setText(car.getFreeTime());
+        tvCarNumber.setText("车牌：" + car.getCarNumber());
+        tvCarBrand.setText("车型：" + car.getCarBand());
+        tvFreeTime.setText("空闲时间：" + car.getFreeTime());
     }
 
     private void findViews(View view) {
@@ -386,6 +386,9 @@ public class HomeCarAdapter extends BaseAdapter {
         }
     }
 
+    /**
+     * 更新空闲时间
+     */
     private class UpdateFreeTimeTask extends AsyncTask<String, Void, Integer> {
 
         @Override
