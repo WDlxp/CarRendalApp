@@ -120,6 +120,8 @@ public class HomeCarAdapter extends BaseAdapter {
                 Window window = alertDialog.getWindow();
                 assert window != null;
                 window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                SharedPreferences sharedPreferences = mContext.getSharedPreferences("data", MODE_PRIVATE);
+                edTel.setText(sharedPreferences.getString("tel", "暂无号码"));
                 //展示弹窗
                 alertDialog.show();
 
