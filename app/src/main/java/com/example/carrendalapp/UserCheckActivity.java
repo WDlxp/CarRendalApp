@@ -36,6 +36,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author H
+ */
 public class UserCheckActivity extends AppCompatActivity {
 
     private ListView lv_checklist;
