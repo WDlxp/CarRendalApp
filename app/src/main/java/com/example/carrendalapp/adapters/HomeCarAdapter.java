@@ -174,36 +174,43 @@ public class HomeCarAdapter extends BaseAdapter {
                         int countFinish = -1;
 
                         Log.d(TAG, "开始判断时间：" + countStart + "结束判断时间：" + countFinish);
+
                         //遍历预约时间，保证预约时间合理
                         for (int f = 0; f < appointStart.length(); f++) {
-                            if (appointStart.charAt(f) > appointFinish.charAt(f)) {
+                            //一旦有一次开始小于结束时间，则时间合理
+                            if (appointStart.charAt(f) < appointFinish.charAt(f)) {
+                                break;
+                            }
+                            //一直没有 开始时间小于结束时间的情况 并且先出现 开始时间大于结束时间的情况，则预约不合理
+                            else if (appointStart.charAt(f) > appointFinish.charAt(f)) {
                                 poStart = -2;
                                 poFinish = -2;
                                 break;
-                            } else if (appointStart.charAt(f) < appointFinish.charAt(f) || appointStart.charAt(f) == appointFinish.charAt(f)) {
-                            } else if (f == appointStart.length() - 1) {
-                                break;
+                            }
+                            //如果遍历到最后也没跳出，说明预约开始时间与结束时间相等
+                            if (f == appointStart.length() - 1) {
+                                Toast.makeText(mContext, "您的预约时间不合理！", Toast.LENGTH_SHORT).show();
                             }
                         }
 
                         for (int a = 0; a < free.size(); a++) {//遍历空闲时间，找到当前预约开始时间所处位置2a
                             Log.d(TAG, "a=：" + a);
-                            if (flagStart) {
-                                Log.d(TAG, "开始为：" + countStart);
+                            if ((2 * a) >= free.size() - 1) {
                                 break;
-                            } else if (free.get(2 * a) != null) {//这些都是开始时间
+
+                            }
+                            //这些都是开始时间
+                            else {
                                 for (int b = 0; b < appointStart.length(); b++) {
-                                    //一旦先遍历到 预约开始时间 有一位大于 某空闲开始时间，则预约开始时间有效，否则继续判断
+                                    //一旦先遍历到 预约开始时间 有一位大于 某空闲开始时间，则预约开始时间有效，赋值后break，继续判断下一个开始时间
                                     if (appointStart.charAt(b) > free.get(2 * a).charAt(b)) {
                                         countStart = 2 * a;
                                         Log.d(TAG, "start成功赋值2a：" + countStart);
-                                        flagStart = true;
                                         break;
                                     }
-                                    //如果预约开始时间小于某空闲开始时间，则将 countstart = 0，后续提示预约时间超出空闲时间
+                                    //如果预约开始时间小于某空闲开始时间，则将break，继续判断下一个开始时间
                                     else if (appointStart.charAt(b) < free.get(2 * a).charAt(b)) {
                                         Log.d(TAG, "start成功赋值-1：" + countStart);
-                                        flagStart = true;
                                         break;
                                     }
 
@@ -216,92 +223,111 @@ public class HomeCarAdapter extends BaseAdapter {
                                     else if (b == appointStart.length() - 1) {
                                         countStart = 2 * a;
                                         Log.d(TAG, "start成功赋值==2a：" + countStart);
-                                        flagStart = true;
                                         break;
                                     }
-
                                 }
-                            } else if (free.get(2 * a) == null) {
-                                break;
                             }
                         }
 
-                        for (int a = 0; a < free.size(); a++) {//遍历空闲时间，找到当前预约结束时间所处位置
-                            Log.d(TAG, "a=：" + a);
-                            if (flagFinish) {
-                                Log.d(TAG, "结束为：" + countStart);
-                                break;
-                            } else if (free.get(2 * a + 1) != null) {//这些都是结束时间
-                                for (int c = 0; c < appointFinish.length(); c++) {
-                                    //一旦先遍历到 预约结束时间 有一位小于 某空闲结束时间，则预约时间结束有效，否则继续判断
-                                    if (appointFinish.charAt(c) < free.get(2 * a + 1).charAt(c)) {
-                                        countFinish = 2 * a + 1;
-                                        Log.d(TAG, "finish成功赋值2a+1：" + countFinish);
-                                        flagFinish = true;
-                                        break;
-                                    }
-                                    //如果预约结束时间大于某空闲结束时间，则将 countfinish = 0，后续提示预约时间超出空闲时间
-                                    else if (appointFinish.charAt(c) > free.get(2 * a + 1).charAt(c)) {
-                                        Log.d(TAG, "finish成功赋值-1：" + countFinish);
-                                        flagFinish = true;
-                                        break;
-                                    }
+                        Log.d(TAG, "继续");
 
-                                    //如果预约结束时间等于某空闲结束时间，则继续判断下一位
-                                    else if (appointFinish.charAt(c) == free.get(2 * a + 1).charAt(c)) {
-                                        Log.d(TAG, "finish=：" + 1);
-                                    }
-                                    //如果预约开始时间最后全部等于某空闲开始时间，则预约时间有效
-                                    else if (c == appointFinish.length() - 1) {
-                                        countFinish = 2 * a + 1;
-                                        Log.d(TAG, "成功赋值2a+1=：" + countFinish);
-                                        flagFinish = true;
-                                        break;
-                                    }
+                        if ((countStart != -1) && (free.get(countStart + 1) != null)) {//如果开始时间存在，则判断结束时间
+                            for (int c = 0; c < appointFinish.length(); c++) {
+                                //一旦先遍历到 预约结束时间 有一位小于 某空闲结束时间，则预约时间结束有效，否则继续判断
+                                if (appointFinish.charAt(c) < free.get(countStart + 1).charAt(c)) {
+                                    countFinish = countStart + 1;
+                                    Log.d(TAG, "finish成功赋值2a+1：" + countFinish);
+                                    break;
                                 }
-                            } else if (free.get(2 * a + 1) == null) {
-                                break;
+                                //如果预约结束时间大于某空闲结束时间，则将 break，判断无效
+                                else if (appointFinish.charAt(c) > free.get(countStart + 1).charAt(c)) {
+                                    Log.d(TAG, "finish成功赋值-1：" + countFinish);
+                                    countFinish = -1;
+                                    break;
+                                }
+
+                                //如果预约结束时间等于某空闲结束时间，则继续判断下一位
+                                else if (appointFinish.charAt(c) == free.get(countStart + 1).charAt(c)) {
+                                    Log.d(TAG, "finish=：" + 1);
+                                }
+                                //如果预约开始时间最后全部等于某空闲开始时间，则预约时间有效
+                                else if (c == appointFinish.length() - 1) {
+                                    countFinish = countStart + 1;
+                                    Log.d(TAG, "成功赋值2a+1=：" + countFinish);
+                                    break;
+                                }
+
                             }
                         }
 
-                        if (edTel.getText().length() != 11) {
-                            Toast.makeText(mContext, "您的电话号码不存在，请重新填写！", Toast.LENGTH_SHORT).show();
-                            edTel.requestFocus();
-                            Log.d(TAG, "电话号码长度为：" + edTel.getText().length() + "");
-                        } else {
-                            if (countStart == countFinish - 1 && countStart != -1 && countFinish != -1 && poStart != -2) {
+//                        for (int a = 0; a < free.size(); a++) {//遍历空闲时间，找到当前预约结束时间所处位置
+//                            Log.d(TAG, "a=：" + a);
+//
+//                            //这些都是结束时间
+//                             if (free.get(2 * a + 1) != null) {
+//                                for (int c = 0; c < appointFinish.length(); c++) {
+//                                    //一旦先遍历到 预约结束时间 有一位小于 某空闲结束时间，则预约时间结束有效，否则继续判断
+//                                    if (appointFinish.charAt(c) < free.get(2 * a + 1).charAt(c)) {
+//                                        countFinish = 2 * a + 1;
+//                                        Log.d(TAG, "finish成功赋值2a+1：" + countFinish);
+//                                        break;
+//                                    }
+//                                    //如果预约结束时间大于某空闲结束时间，则将 break，继续判断下一个结束时间
+//                                    else if (appointFinish.charAt(c) > free.get(2 * a + 1).charAt(c)) {
+//                                        Log.d(TAG, "finish成功赋值-1：" + countFinish);
+//                                        break;
+//                                    }
+//
+//                                    //如果预约结束时间等于某空闲结束时间，则继续判断下一位
+//                                    else if (appointFinish.charAt(c) == free.get(2 * a + 1).charAt(c)) {
+//                                        Log.d(TAG, "finish=：" + 1);
+//                                    }
+//                                    //如果预约开始时间最后全部等于某空闲开始时间，则预约时间有效
+//                                    else if (c == appointFinish.length() - 1) {
+//                                        countFinish = 2 * a + 1;
+//                                        Log.d(TAG, "成功赋值2a+1=：" + countFinish);
+//                                        break;
+//                                    }
+//                                }
+//                            } else if (free.get(2 * a + 1) == null) {
+//                                break;
+//                            }
+//                        }
 
-                                Log.d(TAG, TAG + countStart + " " + countFinish);
-                                free.add(countStart + 1, appointStart);//在2a后面插入预约开始时间
-                                free.add(countFinish, appointFinish);//在2a+1前面插入预约结束时间
+                        if (countStart == countFinish - 1 && countStart != -1 && countFinish != -1 && poStart != -2 && poFinish != -2) {
 
-                                for (int d = 0; d < free.size(); d++) { //计算现在的空闲时间
-                                    freeNow[0] += free.get(d) + " ";
-                                    Log.d(TAG, "目前空闲时间：" + freeNow[0]);
-                                }
-                                Log.d("Appoint", tel);
-                                Log.d("Appoint", appointTime);
+                            Log.d(TAG, TAG + countStart + " " + countFinish);
+                            free.add(countFinish, appointFinish);//在2a+1位置插入预约结束时间
+                            free.add(countStart + 1, appointStart);//然后再在2a后面插入预约开始时间
 
-                                final String finalTel = tel;
+                            for (int d = 0; d < free.size(); d++) { //计算现在的空闲时间
+                                freeNow[0] += free.get(d) + " ";
+                                Log.d(TAG, "目前空闲时间：" + freeNow[0]);
+                            }
+                            Log.d("Appoint", tel);
+                            Log.d("Appoint", appointTime);
 
-                                //获取账号数据
-                                SharedPreferences sp = mContext.getSharedPreferences("data", MODE_PRIVATE);
-                                String account = sp.getString("account", null);
-                                Order carOrder = new Order(account, currentCar.getCarNumber(), startDate, startTime, finishDate, finishTime, 1);
-                                new InsertOrderTask().execute(carOrder);
-                                new UpdateFreeTimeTask().execute(currentCar.getCarNumber(), freeNow[0]);
+                            //获取账号数据
+                            SharedPreferences sp = mContext.getSharedPreferences("data", MODE_PRIVATE);
+                            String account = sp.getString("account", null);
+                            Order carOrder = new Order(account, currentCar.getCarNumber(), startDate, startTime, finishDate, finishTime, 1);
+                            new InsertOrderTask().execute(carOrder);
+                            new UpdateFreeTimeTask().execute(currentCar.getCarNumber(), freeNow[0]);
 //                            Intent intent = new Intent(mContext, MyAppointmentActivity.class);
 //                            mContext.startActivity(intent);
-                                //弹窗消失
-                                alertDialog.dismiss();
-                            } else {
-                                Toast.makeText(mContext, "您的预约时间可能不合理" + "\n" + "或者超出车主空闲时间" + "\n" + "请重新预约哦！", Toast.LENGTH_SHORT).show();
-                            }
+                            //弹窗消失
+                            alertDialog.dismiss();
+                        } else if ((countStart != countFinish - 1) || (countStart == -1) || (countFinish == -1)) {
+                            Toast.makeText(mContext, "您的预约时间超出车主空闲时间" + "\n" + "请重新预约哦！", Toast.LENGTH_SHORT).show();
+                        } else if ((poStart == -2) || (poFinish == -2)) {
+                            Toast.makeText(mContext, "您的预约时间可能不合理" + "\n" + "请重新预约哦！", Toast.LENGTH_SHORT).show();
                         }
                     }
+
                 });
             }
         });
+
         //初始化视图
         initViews(currentCar);
         return view;
@@ -365,7 +391,7 @@ public class HomeCarAdapter extends BaseAdapter {
                 BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
                 String line = br.readLine();
                 JSONObject object = new JSONObject(line);
-                return object.getInt("i");
+                return object.getInt("result");
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -382,6 +408,8 @@ public class HomeCarAdapter extends BaseAdapter {
             super.onPostExecute(integer);
             if (integer == 1) {
                 Toast.makeText(mContext, "预定成功", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext, MyAppointmentActivity.class);
+                mContext.startActivity(intent);
             } else {
                 Toast.makeText(mContext, "预定失败", Toast.LENGTH_SHORT).show();
             }
@@ -406,7 +434,7 @@ public class HomeCarAdapter extends BaseAdapter {
                 BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
                 String line = br.readLine();
                 JSONObject object = new JSONObject(line);
-                return object.getInt("i");
+                return object.getInt("result");
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();

@@ -65,11 +65,4 @@ public class MyViewPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         return pageTitles.get(position);
     }
-
-    @Override
-    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-        super.destroyItem(container, position, object);
-        //销毁页面
-        container.removeView(fragmentList.get(position).getView());
-    }
 }
