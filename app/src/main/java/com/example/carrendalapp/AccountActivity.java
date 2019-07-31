@@ -1,23 +1,18 @@
 package com.example.carrendalapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.carrendalapp.config.UrlAddress;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.carrendalapp.entity.User;
 import com.example.carrendalapp.tasks.DownloadImageTask;
 import com.example.carrendalapp.utils.ActionBarAndStatusBarUtil;
-import com.example.carrendalapp.utils.ImageUtil;
 import com.example.carrendalapp.views.CircleImageView;
 
 /**

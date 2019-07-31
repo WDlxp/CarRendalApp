@@ -3,9 +3,6 @@ package com.example.carrendalapp;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -18,8 +15,6 @@ import com.example.carrendalapp.adapters.CheckAdapter;
 import com.example.carrendalapp.config.UrlAddress;
 import com.example.carrendalapp.entity.Car;
 import com.example.carrendalapp.entity.CarOrder;
-import com.example.carrendalapp.entity.User;
-import com.example.carrendalapp.fragments.MemberFragment;
 import com.example.carrendalapp.utils.ActionBarAndStatusBarUtil;
 
 import org.json.JSONArray;

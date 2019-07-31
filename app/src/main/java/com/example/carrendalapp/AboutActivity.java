@@ -3,15 +3,12 @@ package com.example.carrendalapp;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.carrendalapp.utils.ActionBarAndStatusBarUtil;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 /**
  * @author WD

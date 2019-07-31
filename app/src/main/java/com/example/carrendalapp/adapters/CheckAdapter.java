@@ -1,10 +1,8 @@
 package com.example.carrendalapp.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +11,9 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.carrendalapp.LoginActivity;
-import com.example.carrendalapp.MainActivity;
 import com.example.carrendalapp.R;
 import com.example.carrendalapp.config.UrlAddress;
 import com.example.carrendalapp.entity.Car;
-import com.example.carrendalapp.entity.User;
 import com.example.carrendalapp.tasks.DownloadImageTask;
 import com.example.carrendalapp.views.CircleImageView;
 
@@ -60,7 +55,8 @@ public class CheckAdapter extends ArrayAdapter {
 
 
         //如果图片不为空的时候下载头像
-        if (!"null".equals(car.getImage()) && car.getImage() != null) {//获取头像
+        //获取头像
+        if (!"null".equals(car.getImage()) && car.getImage() != null) {
             new DownloadImageTask(img).execute(car.getImage());
         }
 
